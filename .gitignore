@@ -9,4 +9,7 @@ coverage
 .turbo
 .pnpm-store
 uploads/
+backend/data/
 *.sqlite
+*.db
+*.db-journal

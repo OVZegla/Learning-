@@ -1,102 +1,82 @@
 # Learning+
 
-E-learning platform with role-based access control. Admins and formateurs publish courses; apprenants see only the courses they've been granted access to.
+Plateforme e-learning avec contrôle d'accès par rôle. Tourne sur Windows en double-clic, stocke ses données dans un fichier SQLite local.
 
-## Stack
+## Démarrage rapide sur Windows
 
-- **Backend**: NestJS (TypeScript), Prisma, PostgreSQL, JWT auth (access + refresh)
-- **Frontend**: Next.js 14 (App Router), React, Tailwind CSS
-- **Infra**: Docker Compose (db + backend + frontend)
+**Prérequis** : Node.js LTS installé ([nodejs.org](https://nodejs.org/)).
+
+1. Double-cliquez sur `start.bat`.
+2. Au premier lancement, le script installe les dépendances, prépare la base SQLite et compile le projet (quelques minutes).
+3. Votre navigateur s'ouvre automatiquement sur http://localhost:3000.
+
+Comptes de démonstration (créés au premier seed) :
+
+| Rôle       | Email                        | Mot de passe    |
+|------------|------------------------------|-----------------|
+| Admin      | `admin@learning.local`       | `admin123`      |
+| Formateur  | `formateur@learning.local`   | `formateur123`  |
+| Apprenant  | `apprenant@learning.local`   | `apprenant123`  |
+
+**Pour arrêter** : fermez les deux fenêtres `Learning+ API` et `Learning+ Frontend`, ou double-cliquez sur `stop.bat`.
+
+**Pour reconstruire après une mise à jour du code** : double-cliquez sur `rebuild.bat`, puis `start.bat`.
+
+Toutes les données sont stockées dans `backend/data/learning.db` — sauvegardez ce fichier pour conserver vos utilisateurs et formations.
 
 ## Architecture
 
-```
-┌──────────────┐      HTTPS/JSON      ┌───────────────┐      SQL      ┌──────────────┐
-│  Next.js UI  │ ───────────────────► │  NestJS API   │ ────────────► │  PostgreSQL  │
-│  (frontend)  │ ◄─── JWT cookies ─── │  (backend)    │               │              │
-└──────────────┘                      └───────────────┘               └──────────────┘
-```
+- **Frontend** : Next.js 14 (App Router) + Tailwind → http://localhost:3000
+- **Backend** : NestJS + Prisma + SQLite → http://localhost:4000/api
+- **Auth** : JWT (access token en mémoire + refresh token en cookie httpOnly)
+- **Autorisation** : deux couches — rôle (`ADMIN` / `FORMATEUR` / `APPRENANT`) et enrollment (l'apprenant ne voit que les formations auxquelles il a été rattaché).
 
-- The backend exposes a REST API under `/api`.
-- Auth is JWT-based with short-lived access tokens and refresh tokens.
-- Authorization is enforced by two layers:
-  1. **Role guard**: `ADMIN`, `FORMATEUR`, `APPRENANT`.
-  2. **Enrollment guard**: apprenants can only read courses they are enrolled in (directly or through a group).
+## Modèle de données
 
-## Domain model
+- `User` → rôle unique
+- `Group` → cohorte facultative (entreprise, classe)
+- `Course` → `Module` → `Lesson` (types : VIDEO, TEXT, PDF, IMAGE, QUIZ)
+- `Enrollment` → accorde l'accès à un utilisateur **ou** à un groupe, avec expiration facultative
+- `Progress`, `Quiz`, `Question`, `QuizAttempt`, `Certificate` — modèles en place, logique métier à compléter.
 
-- `User` — account with one role
-- `Group` — optional cohort (e.g. company, classroom)
-- `Course` → `Module` → `Lesson` (ordered, drag-and-droppable)
-- `Lesson` has a `type` (VIDEO, TEXT, PDF, IMAGE, QUIZ) and content
-- `Enrollment` — grants a user (or group) access to a course, optionally time-bounded
-- `Progress` — per-user completion state per lesson
-- `Quiz` / `Question` / `Answer` — assessments
-- `Certificate` — issued when course conditions are met
+Schéma complet : `backend/prisma/schema.prisma`.
 
-The Prisma schema in `backend/prisma/schema.prisma` covers all of these so later features (progression, quizzes, certifications, notifications) can build on the same DB without migrations re-shuffling.
+## Personnaliser le logo
 
-## Running locally
+Le logo est chargé depuis `frontend/public/logo.svg` par le composant `frontend/src/components/Logo.tsx`. Remplacez le fichier (SVG, PNG, WebP…) ; si vous changez l'extension, mettez à jour la ligne `src="/logo.svg"` dans `Logo.tsx`.
 
-### With Docker (recommended)
+## Développement
 
-```bash
-docker compose up --build
+Pour un mode développement avec hot-reload au lieu du mode compilé :
+
+```bat
+cd backend && npm run start:dev
+cd frontend && npm run dev
 ```
 
-- Frontend: http://localhost:3000
-- API: http://localhost:4000
-- Postgres: localhost:5432 (user `learning`, pw `learning`)
+## Générer un vrai `.exe` autonome (optionnel)
 
-The container runs `prisma migrate deploy` on startup. To seed demo data:
+`start.bat` est volontairement simple et suffit pour distribuer le projet. Si vous voulez vraiment un binaire unique packagé, la route recommandée est [`@yao-pkg/pkg`](https://github.com/yao-pkg/pkg) côté backend + Next.js en mode `output: 'standalone'` embarqué. Cela nécessite :
 
-```bash
-docker compose exec backend npm run seed
-```
+1. D'exécuter le packaging **sur Windows** (pour produire un binaire Windows).
+2. De copier manuellement les moteurs natifs de Prisma (`query-engine-windows.exe`) dans le bundle.
 
-Default admin: `admin@learning.local` / `admin123` (change immediately).
+Le `start.bat` actuel atteint l'objectif « double-clic et ça tourne » sans cette complexité supplémentaire.
 
-### Without Docker
+## Implémenté
 
-```bash
-# 1. Postgres running on localhost:5432
-cd backend
-cp .env.example .env
-npm install
-npx prisma migrate dev
-npm run seed
-npm run start:dev
+- Auth (register / login / refresh / logout / me)
+- Rôles ADMIN / FORMATEUR / APPRENANT
+- CRUD formations / modules / leçons (formateur et admin)
+- Gestion des accès (admin) par utilisateur ou par groupe, avec expiration
+- Dashboard apprenant : uniquement les formations auxquelles il a accès
+- Lecteur de leçon (vidéo, texte, PDF, image)
 
-# in another terminal
-cd frontend
-cp .env.example .env.local
-npm install
-npm run dev
-```
+## Stubs (schéma prêt, UI/logique à compléter)
 
-## Updating the logo
-
-The logo ships at `frontend/public/logo.svg` and is rendered by `<Logo />` (`frontend/src/components/Logo.tsx`). Replace the file in place (any format — svg/png/webp) and, if the filename/extension changes, update the one `src="/logo.svg"` line in `Logo.tsx`. Nothing else to touch.
-
-## What's implemented
-
-- [x] Auth: register, login, refresh, me, logout
-- [x] Roles: ADMIN / FORMATEUR / APPRENANT
-- [x] Courses + modules + lessons CRUD (formateur/admin)
-- [x] Enrollment management (admin): assign/revoke per user or group, with optional expiry
-- [x] Access enforcement: apprenants can only access enrolled courses
-- [x] Frontend: login, register, dashboard (my courses), course viewer, admin users/enrollments
-- [x] Docker Compose for one-command boot
-
-## What's stubbed or left for follow-up
-
-The Prisma schema and module scaffolding are in place for these, but the business logic / UI is not built yet:
-
-- Quizzes (schema exists, grading endpoint TODO)
-- Progress tracking (model exists, automatic marking TODO)
-- Certificates (PDF generation TODO)
-- Notifications (email + in-app)
-- Payments
-- Multi-tenant organizations
-- Video streaming / signed URLs
-- Recommendations / badges / leaderboard
+- Quiz (correction automatique)
+- Suivi de progression automatique
+- Certificats PDF
+- Notifications email / in-app
+- Paiement, multi-organisation, streaming vidéo signé
+- Recommandations, badges, leaderboard

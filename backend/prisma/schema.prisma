@@ -3,36 +3,22 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  FORMATEUR
-  APPRENANT
-}
-
-enum LessonType {
-  VIDEO
-  TEXT
-  PDF
-  IMAGE
-  QUIZ
-}
-
-enum CourseStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
+// SQLite has no enum type; we keep these as strings validated at the app layer.
+// Allowed values:
+//   Role:         ADMIN | FORMATEUR | APPRENANT
+//   LessonType:   VIDEO | TEXT | PDF | IMAGE | QUIZ
+//   CourseStatus: DRAFT | PUBLISHED | ARCHIVED
 
 model User {
   id            String         @id @default(cuid())
   email         String         @unique
   password      String
   name          String
-  role          Role           @default(APPRENANT)
+  role          String         @default("APPRENANT")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
@@ -46,14 +32,14 @@ model User {
 }
 
 model RefreshToken {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
-  tokenHash String   @unique
+  tokenHash String    @unique
   expiresAt DateTime
   revokedAt DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -80,19 +66,19 @@ model GroupMember {
 }
 
 model Course {
-  id          String       @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
   description String?
   category    String?
   coverUrl    String?
-  status      CourseStatus @default(DRAFT)
+  status      String        @default("DRAFT")
   authorId    String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
-  author      User         @relation("CourseAuthor", fields: [authorId], references: [id])
-  modules     Module[]
-  enrollments Enrollment[]
+  author       User          @relation("CourseAuthor", fields: [authorId], references: [id])
+  modules      Module[]
+  enrollments  Enrollment[]
   certificates Certificate[]
 
   @@index([authorId])
@@ -117,8 +103,9 @@ model Lesson {
   moduleId  String
   title     String
   position  Int
-  type      LessonType
-  content   Json
+  type      String
+  // SQLite has no native JSON type: we store serialized JSON.
+  content   String
   createdAt DateTime   @default(now())
 
   module    Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
@@ -128,8 +115,6 @@ model Lesson {
   @@index([moduleId])
 }
 
-// An enrollment grants a User OR a Group access to a Course.
-// Exactly one of userId / groupId is set.
 model Enrollment {
   id        String    @id @default(cuid())
   courseId  String
@@ -150,38 +135,39 @@ model Enrollment {
 }
 
 model Progress {
-  id          String    @id @default(cuid())
-  userId      String
-  lessonId    String
-  completedAt DateTime?
-  secondsSpent Int      @default(0)
-  updatedAt   DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  userId       String
+  lessonId     String
+  completedAt  DateTime?
+  secondsSpent Int       @default(0)
+  updatedAt    DateTime  @updatedAt
 
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson       Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
 }
 
 model Quiz {
-  id         String     @id @default(cuid())
-  lessonId   String     @unique
-  passingScore Int      @default(80)
-  questions  Question[]
-  attempts   QuizAttempt[]
+  id           String        @id @default(cuid())
+  lessonId     String        @unique
+  passingScore Int           @default(80)
+  questions    Question[]
+  attempts     QuizAttempt[]
 
-  lesson     Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lesson       Lesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 }
 
 model Question {
-  id       String   @id @default(cuid())
+  id       String @id @default(cuid())
   quizId   String
   prompt   String
-  type     String   // MCQ | TRUE_FALSE | TEXT
+  type     String
   position Int
-  choices  Json     // [{id,text,correct}]
+  // Serialized JSON: [{id,text,correct}]
+  choices  String
 
-  quiz     Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quiz     Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
 }
 
 model QuizAttempt {
@@ -190,7 +176,8 @@ model QuizAttempt {
   userId    String
   score     Int
   passed    Boolean
-  answers   Json
+  // Serialized JSON of answers.
+  answers   String
   createdAt DateTime @default(now())
 
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
@@ -198,14 +185,14 @@ model QuizAttempt {
 }
 
 model Certificate {
-  id        String   @id @default(cuid())
-  userId    String
-  courseId  String
-  issuedAt  DateTime @default(now())
-  pdfUrl    String?
+  id       String   @id @default(cuid())
+  userId   String
+  courseId String
+  issuedAt DateTime @default(now())
+  pdfUrl   String?
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
 }

@@ -1,20 +1,17 @@
-import { PrismaClient, Role, CourseStatus, LessonType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const adminEmail = "admin@learning.local";
-  const passwordHash = await bcrypt.hash("admin123", 10);
-
   const admin = await prisma.user.upsert({
-    where: { email: adminEmail },
+    where: { email: "admin@learning.local" },
     update: {},
     create: {
-      email: adminEmail,
+      email: "admin@learning.local",
       name: "Admin",
-      password: passwordHash,
-      role: Role.ADMIN,
+      password: await bcrypt.hash("admin123", 10),
+      role: "ADMIN",
     },
   });
 
@@ -25,7 +22,7 @@ async function main() {
       email: "formateur@learning.local",
       name: "Formateur Demo",
       password: await bcrypt.hash("formateur123", 10),
-      role: Role.FORMATEUR,
+      role: "FORMATEUR",
     },
   });
 
@@ -36,7 +33,7 @@ async function main() {
       email: "apprenant@learning.local",
       name: "Apprenant Demo",
       password: await bcrypt.hash("apprenant123", 10),
-      role: Role.APPRENANT,
+      role: "APPRENANT",
     },
   });
 
@@ -47,7 +44,7 @@ async function main() {
         title: "Bienvenue sur Learning+",
         description: "Cours de démonstration pour découvrir la plateforme.",
         category: "Onboarding",
-        status: CourseStatus.PUBLISHED,
+        status: "PUBLISHED",
         authorId: formateur.id,
         modules: {
           create: [
@@ -59,14 +56,16 @@ async function main() {
                   {
                     title: "À propos de Learning+",
                     position: 1,
-                    type: LessonType.TEXT,
-                    content: { body: "Bienvenue ! Cette leçon présente la plateforme." },
+                    type: "TEXT",
+                    content: JSON.stringify({
+                      body: "Bienvenue ! Cette leçon présente la plateforme.",
+                    }),
                   },
                   {
                     title: "Vidéo d'introduction",
                     position: 2,
-                    type: LessonType.VIDEO,
-                    content: { url: "https://example.com/intro.mp4" },
+                    type: "VIDEO",
+                    content: JSON.stringify({ url: "https://example.com/intro.mp4" }),
                   },
                 ],
               },

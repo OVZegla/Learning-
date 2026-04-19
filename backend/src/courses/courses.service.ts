@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { CourseStatus, Role } from "@prisma/client";
+import { CourseStatus, Role } from "../common/types";
 import { AccessService } from "./access.service";
 import {
   CreateCourseDto,
@@ -53,7 +53,21 @@ export class CoursesService {
       },
     });
     if (!course) throw new NotFoundException();
-    return course;
+    return {
+      ...course,
+      modules: course.modules.map((m) => ({
+        ...m,
+        lessons: m.lessons.map((l) => ({ ...l, content: this.parseJson(l.content) })),
+      })),
+    };
+  }
+
+  private parseJson(s: string): unknown {
+    try {
+      return JSON.parse(s);
+    } catch {
+      return {};
+    }
   }
 
   async create(author: { id: string; role: Role }, dto: CreateCourseDto) {
@@ -88,7 +102,7 @@ export class CoursesService {
         title: dto.title,
         position: dto.position,
         type: dto.type,
-        content: dto.content as any,
+        content: JSON.stringify(dto.content ?? {}),
       },
     });
   }

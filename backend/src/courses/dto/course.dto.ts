@@ -1,5 +1,5 @@
-import { IsEnum, IsInt, IsObject, IsOptional, IsString, MinLength, Min } from "class-validator";
-import { CourseStatus, LessonType } from "@prisma/client";
+import { IsIn, IsInt, IsObject, IsOptional, IsString, MinLength, Min } from "class-validator";
+import { CourseStatus, LessonType } from "../../common/types";
 
 export class CreateCourseDto {
   @IsString()
@@ -37,7 +37,7 @@ export class UpdateCourseDto {
   coverUrl?: string;
 
   @IsOptional()
-  @IsEnum(CourseStatus)
+  @IsIn(Object.values(CourseStatus))
   status?: CourseStatus;
 }
 
@@ -58,7 +58,7 @@ export class CreateLessonDto {
   @Min(1)
   position!: number;
 
-  @IsEnum(LessonType)
+  @IsIn(Object.values(LessonType))
   type!: LessonType;
 
   @IsObject()

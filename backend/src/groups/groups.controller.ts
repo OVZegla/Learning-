@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { IsOptional, IsString } from "class-validator";
-import { Role } from "@prisma/client";
+import { Role } from "../common/types";
 import { GroupsService } from "./groups.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
