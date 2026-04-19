@@ -1,0 +1,211 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  FORMATEUR
+  APPRENANT
+}
+
+enum LessonType {
+  VIDEO
+  TEXT
+  PDF
+  IMAGE
+  QUIZ
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  name          String
+  role          Role           @default(APPRENANT)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  coursesOwned  Course[]       @relation("CourseAuthor")
+  enrollments   Enrollment[]
+  groupMembers  GroupMember[]
+  progress      Progress[]
+  certificates  Certificate[]
+  refreshTokens RefreshToken[]
+  quizAttempts  QuizAttempt[]
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime      @default(now())
+
+  members     GroupMember[]
+  enrollments Enrollment[]
+}
+
+model GroupMember {
+  groupId  String
+  userId   String
+  joinedAt DateTime @default(now())
+
+  group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, userId])
+}
+
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  category    String?
+  coverUrl    String?
+  status      CourseStatus @default(DRAFT)
+  authorId    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  author      User         @relation("CourseAuthor", fields: [authorId], references: [id])
+  modules     Module[]
+  enrollments Enrollment[]
+  certificates Certificate[]
+
+  @@index([authorId])
+  @@index([status])
+}
+
+model Module {
+  id        String   @id @default(cuid())
+  courseId  String
+  title     String
+  position  Int
+  createdAt DateTime @default(now())
+
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id        String     @id @default(cuid())
+  moduleId  String
+  title     String
+  position  Int
+  type      LessonType
+  content   Json
+  createdAt DateTime   @default(now())
+
+  module    Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress  Progress[]
+  quiz      Quiz?
+
+  @@index([moduleId])
+}
+
+// An enrollment grants a User OR a Group access to a Course.
+// Exactly one of userId / groupId is set.
+model Enrollment {
+  id        String    @id @default(cuid())
+  courseId  String
+  userId    String?
+  groupId   String?
+  expiresAt DateTime?
+  grantedAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  course    Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group     Group?    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, userId])
+  @@unique([courseId, groupId])
+  @@index([userId])
+  @@index([groupId])
+}
+
+model Progress {
+  id          String    @id @default(cuid())
+  userId      String
+  lessonId    String
+  completedAt DateTime?
+  secondsSpent Int      @default(0)
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson      Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+}
+
+model Quiz {
+  id         String     @id @default(cuid())
+  lessonId   String     @unique
+  passingScore Int      @default(80)
+  questions  Question[]
+  attempts   QuizAttempt[]
+
+  lesson     Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+model Question {
+  id       String   @id @default(cuid())
+  quizId   String
+  prompt   String
+  type     String   // MCQ | TRUE_FALSE | TEXT
+  position Int
+  choices  Json     // [{id,text,correct}]
+
+  quiz     Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  quizId    String
+  userId    String
+  score     Int
+  passed    Boolean
+  answers   Json
+  createdAt DateTime @default(now())
+
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Certificate {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  issuedAt  DateTime @default(now())
+  pdfUrl    String?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+}
