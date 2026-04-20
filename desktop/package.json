@@ -1,0 +1,48 @@
+{
+  "name": "learning-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win --x64 --dir",
+    "dist:mac": "electron-builder --mac --dir"
+  },
+  "devDependencies": {
+    "electron": "^29.4.6",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.learning.desktop",
+    "productName": "Learning+",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "../backend/dist", "to": "backend/dist" },
+      { "from": "../backend/node_modules", "to": "backend/node_modules" },
+      { "from": "../backend/prisma", "to": "backend/prisma" },
+      { "from": "../backend/package.json", "to": "backend/package.json" },
+      { "from": "../backend/data", "to": "backend/data" },
+      { "from": "../frontend/.next/standalone", "to": "frontend" },
+      { "from": "../frontend/.next/static", "to": "frontend/.next/static" },
+      { "from": "../frontend/public", "to": "frontend/public" }
+    ],
+    "win": {
+      "target": "dir"
+    },
+    "mac": {
+      "target": "dir",
+      "category": "public.app-category.education"
+    },
+    "linux": {
+      "target": "dir"
+    }
+  }
+}
