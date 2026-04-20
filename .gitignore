@@ -14,3 +14,5 @@ backend/data/
 *.sqlite
 *.db
 *.db-journal
+*.tsbuildinfo
+package-lock.json
