@@ -72,10 +72,9 @@ if [ ! -f .env.local ]; then
   cp .env.example .env.local
 fi
 
-if [ ! -d .next ]; then
-  echo "[+] Compilation frontend..."
-  npm run build
-fi
+echo "[+] Compilation frontend..."
+rm -rf .next
+npm run build
 popd >/dev/null
 
 # --- Launch ---

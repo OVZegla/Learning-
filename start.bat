@@ -82,11 +82,10 @@ if not exist .env.local (
   copy .env.example .env.local >nul
 )
 
-if not exist .next (
-  echo [+] Compilation frontend...
-  call npm run build
-  if errorlevel 1 goto :error
-)
+echo [+] Compilation frontend...
+if exist .next rmdir /s /q .next
+call npm run build
+if errorlevel 1 goto :error
 popd
 
 echo.
