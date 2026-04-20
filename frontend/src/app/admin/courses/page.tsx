@@ -113,6 +113,9 @@ function Courses() {
                 <p className="mt-2 line-clamp-2 text-sm text-neutral-500">{c.description}</p>
               )}
               <div className="mt-3 flex flex-wrap gap-2">
+                <Link className="btn-secondary" href={`/admin/courses/${c.id}/edit`}>
+                  Éditer le contenu
+                </Link>
                 {c.status !== "PUBLISHED" && (
                   <button className="btn-secondary" onClick={() => setStatus(c.id, "PUBLISHED")}>
                     Publier
