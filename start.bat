@@ -61,14 +61,13 @@ echo [+] Mise a jour du schema SQLite...
 call npx prisma db push --skip-generate
 if errorlevel 1 goto :error
 
-if not exist dist (
-  echo [+] Compilation backend...
-  call npm run build
-  if errorlevel 1 goto :error
+echo [+] Compilation backend...
+if exist dist rmdir /s /q dist
+call npm run build
+if errorlevel 1 goto :error
 
-  echo [+] Creation des comptes de demonstration...
-  call npm run seed
-)
+echo [+] Verification des comptes de demonstration...
+call npm run seed
 popd
 
 rem --- Frontend : install + build ---

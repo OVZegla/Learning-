@@ -53,12 +53,12 @@ npx prisma generate
 echo "[+] Mise a jour du schema SQLite..."
 npx prisma db push --skip-generate
 
-if [ ! -d dist ]; then
-  echo "[+] Compilation backend..."
-  npm run build
-  echo "[+] Creation des comptes de demonstration..."
-  npm run seed
-fi
+echo "[+] Compilation backend..."
+rm -rf dist
+npm run build
+
+echo "[+] Verification des comptes de demonstration..."
+npm run seed
 popd >/dev/null
 
 # --- Frontend ---
