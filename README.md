@@ -1,28 +1,40 @@
 # Learning+
 
-Plateforme e-learning avec contrôle d'accès par rôle. Tourne sur Windows en double-clic, stocke ses données dans un fichier SQLite local.
+Plateforme e-learning avec contrôle d'accès par rôle. **Aucune installation requise** : double-cliquez sur le lanceur correspondant à votre OS, le script télécharge tout seul Node.js portable au premier lancement.
 
-## Démarrage rapide sur Windows
+## Démarrage rapide
 
-**Prérequis** : Node.js LTS installé ([nodejs.org](https://nodejs.org/)).
+### Windows
 
-1. Double-cliquez sur `start.bat`.
-2. Au premier lancement, le script installe les dépendances, prépare la base SQLite et compile le projet (quelques minutes).
-3. Votre navigateur s'ouvre automatiquement sur http://localhost:3000.
+Double-cliquez sur **`start.bat`**.
 
-Comptes de démonstration (créés au premier seed) :
+- Au premier lancement : télécharge Node.js portable dans `.bin/` (~30 Mo, internet requis), installe les dépendances, prépare la base SQLite, compile.
+- Lancements suivants : démarrage immédiat.
+- Le navigateur s'ouvre automatiquement sur http://localhost:3000.
 
-| Rôle       | Email                        | Mot de passe    |
-|------------|------------------------------|-----------------|
-| Admin      | `admin@learning.local`       | `admin123`      |
-| Formateur  | `formateur@learning.local`   | `formateur123`  |
-| Apprenant  | `apprenant@learning.local`   | `apprenant123`  |
+Pour arrêter : fermez les deux fenêtres `Learning+ API` et `Learning+ Frontend`, ou double-cliquez sur `stop.bat`.
 
-**Pour arrêter** : fermez les deux fenêtres `Learning+ API` et `Learning+ Frontend`, ou double-cliquez sur `stop.bat`.
+### macOS
 
-**Pour reconstruire après une mise à jour du code** : double-cliquez sur `rebuild.bat`, puis `start.bat`.
+Double-cliquez sur **`start.command`**.
+
+- Au premier lancement : télécharge Node.js portable (Apple Silicon ou Intel détecté automatiquement) dans `.bin/`.
+- macOS Gatekeeper peut bloquer l'exécution la première fois : faites alors **clic droit → Ouvrir** sur `start.command`, puis confirmez.
+- Si le script n'est pas exécutable : dans Terminal, lancez `chmod +x start.command` une fois.
+
+Pour arrêter : fermez la fenêtre Terminal ou appuyez sur **Ctrl+C**.
+
+### Comptes de démonstration
+
+| Rôle      | Email                         | Mot de passe   |
+|-----------|-------------------------------|----------------|
+| Admin     | `admin@learning.local`        | `admin123`     |
+| Formateur | `formateur@learning.local`    | `formateur123` |
+| Apprenant | `apprenant@learning.local`    | `apprenant123` |
 
 Toutes les données sont stockées dans `backend/data/learning.db` — sauvegardez ce fichier pour conserver vos utilisateurs et formations.
+
+Pour reconstruire après un changement de code : double-cliquez sur `rebuild.bat` (Windows) ou supprimez `backend/dist` et `frontend/.next` puis relancez (Mac), puis relancez le script de démarrage.
 
 ## Architecture
 
@@ -44,24 +56,6 @@ Schéma complet : `backend/prisma/schema.prisma`.
 ## Personnaliser le logo
 
 Le logo est chargé depuis `frontend/public/logo.svg` par le composant `frontend/src/components/Logo.tsx`. Remplacez le fichier (SVG, PNG, WebP…) ; si vous changez l'extension, mettez à jour la ligne `src="/logo.svg"` dans `Logo.tsx`.
-
-## Développement
-
-Pour un mode développement avec hot-reload au lieu du mode compilé :
-
-```bat
-cd backend && npm run start:dev
-cd frontend && npm run dev
-```
-
-## Générer un vrai `.exe` autonome (optionnel)
-
-`start.bat` est volontairement simple et suffit pour distribuer le projet. Si vous voulez vraiment un binaire unique packagé, la route recommandée est [`@yao-pkg/pkg`](https://github.com/yao-pkg/pkg) côté backend + Next.js en mode `output: 'standalone'` embarqué. Cela nécessite :
-
-1. D'exécuter le packaging **sur Windows** (pour produire un binaire Windows).
-2. De copier manuellement les moteurs natifs de Prisma (`query-engine-windows.exe`) dans le bundle.
-
-Le `start.bat` actuel atteint l'objectif « double-clic et ça tourne » sans cette complexité supplémentaire.
 
 ## Implémenté
 

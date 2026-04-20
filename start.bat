@@ -8,14 +8,35 @@ echo        Learning+  -  Demarrage Windows
 echo ============================================
 echo.
 
-where node >nul 2>&1
-if errorlevel 1 (
-  echo [!] Node.js n'est pas installe.
-  echo     Telechargez-le ici: https://nodejs.org/  (version LTS)
-  echo     Relancez ce fichier apres installation.
-  pause
-  exit /b 1
+set NODE_VERSION=v20.11.1
+set NODE_PKG=node-%NODE_VERSION%-win-x64
+set NODE_DIR=%~dp0.bin\%NODE_PKG%
+set NODE_ZIP=%~dp0.bin\node.zip
+set NODE_URL=https://nodejs.org/dist/%NODE_VERSION%/%NODE_PKG%.zip
+
+if not exist "%NODE_DIR%\node.exe" (
+  echo [+] Premier lancement : telechargement de Node.js portable...
+  if not exist "%~dp0.bin" mkdir "%~dp0.bin"
+  powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%NODE_URL%' -OutFile '%NODE_ZIP%'"
+  if errorlevel 1 (
+    echo [!] Echec du telechargement. Verifiez votre connexion internet.
+    pause
+    exit /b 1
+  )
+  echo [+] Extraction...
+  powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "Expand-Archive -Path '%NODE_ZIP%' -DestinationPath '%~dp0.bin' -Force"
+  if errorlevel 1 (
+    echo [!] Echec de l'extraction.
+    pause
+    exit /b 1
+  )
+  del "%NODE_ZIP%"
+  echo [+] Node.js portable installe dans .bin\
 )
+
+set "PATH=%NODE_DIR%;%PATH%"
 
 rem --- Backend : install + prisma + build ---
 pushd backend
@@ -27,7 +48,7 @@ if not exist node_modules (
 
 if not exist .env (
   copy .env.example .env >nul
-  echo [+] Fichier backend\.env cree ^(vous pouvez le personnaliser^).
+  echo [+] Fichier backend\.env cree.
 )
 
 if not exist data mkdir data
@@ -71,9 +92,9 @@ popd
 
 echo.
 echo [+] Demarrage des serveurs...
-start "Learning+ API"      cmd /k "cd /d %~dp0backend && npm run start"
+start "Learning+ API"      cmd /k "set PATH=%NODE_DIR%;%%PATH%% && cd /d %~dp0backend && npm run start"
 timeout /t 3 /nobreak >nul
-start "Learning+ Frontend" cmd /k "cd /d %~dp0frontend && npm run start"
+start "Learning+ Frontend" cmd /k "set PATH=%NODE_DIR%;%%PATH%% && cd /d %~dp0frontend && npm run start"
 timeout /t 4 /nobreak >nul
 start "" http://localhost:3000
 
@@ -87,8 +108,8 @@ echo   admin@learning.local      / admin123
 echo   formateur@learning.local  / formateur123
 echo   apprenant@learning.local  / apprenant123
 echo.
-echo Fermez les deux fenetres "Learning+ API" et "Learning+ Frontend" pour arreter.
-echo Cette fenetre peut etre fermee.
+echo Pour arreter : fermez les fenetres "Learning+ API" et "Learning+ Frontend",
+echo ou double-cliquez sur stop.bat.
 pause
 exit /b 0
 
