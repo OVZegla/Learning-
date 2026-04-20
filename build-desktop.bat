@@ -75,8 +75,10 @@ if not exist .env.local (
 
 echo [+] Frontend compile (standalone)...
 if exist .next rmdir /s /q .next
+set NEXT_STANDALONE=1
 call npm run build
 if errorlevel 1 goto :error
+set NEXT_STANDALONE=
 popd
 
 rem --- Electron packaging ---

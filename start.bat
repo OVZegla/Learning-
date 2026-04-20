@@ -40,11 +40,9 @@ set "PATH=%NODE_DIR%;%PATH%"
 
 rem --- Backend : install + prisma + build ---
 pushd backend
-if not exist node_modules (
-  echo [+] Installation des dependances backend...
-  call npm install
-  if errorlevel 1 goto :error
-)
+echo [+] Installation/maj des dependances backend...
+call npm install --no-audit --no-fund
+if errorlevel 1 goto :error
 
 if not exist .env (
   copy .env.example .env >nul
@@ -72,11 +70,9 @@ popd
 
 rem --- Frontend : install + build ---
 pushd frontend
-if not exist node_modules (
-  echo [+] Installation des dependances frontend...
-  call npm install
-  if errorlevel 1 goto :error
-)
+echo [+] Installation/maj des dependances frontend...
+call npm install --no-audit --no-fund
+if errorlevel 1 goto :error
 
 if not exist .env.local (
   copy .env.example .env.local >nul

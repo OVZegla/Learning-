@@ -35,10 +35,8 @@ export PATH="${NODE_DIR}/bin:$PATH"
 
 # --- Backend ---
 pushd backend >/dev/null
-if [ ! -d node_modules ]; then
-  echo "[+] Installation des dependances backend..."
-  npm install
-fi
+echo "[+] Installation/maj des dependances backend..."
+npm install --no-audit --no-fund
 
 if [ ! -f .env ]; then
   cp .env.example .env
@@ -63,10 +61,8 @@ popd >/dev/null
 
 # --- Frontend ---
 pushd frontend >/dev/null
-if [ ! -d node_modules ]; then
-  echo "[+] Installation des dependances frontend..."
-  npm install
-fi
+echo "[+] Installation/maj des dependances frontend..."
+npm install --no-audit --no-fund
 
 if [ ! -f .env.local ]; then
   cp .env.example .env.local

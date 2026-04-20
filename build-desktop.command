@@ -62,7 +62,7 @@ fi
 
 echo "[+] Frontend compile (standalone)..."
 rm -rf .next
-npm run build
+NEXT_STANDALONE=1 npm run build
 popd >/dev/null
 
 # --- Electron packaging ---
