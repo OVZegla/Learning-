@@ -1,0 +1,2952 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Learning+ · Apprenez des choses concrètes, à votre rythme</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================
+   LEARNING+ — Design System
+   ============================================ */
+
+:root {
+  /* Type */
+  --font-sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radius */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+
+  /* Spacing */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  /* LIGHT */
+  --bg: oklch(0.985 0.01 85);
+  --bg-raised: oklch(1 0 0);
+  --bg-sunken: oklch(0.96 0.015 85);
+  --bg-inset: oklch(0.94 0.02 85);
+  --ink: oklch(0.18 0.01 60);
+  --ink-2: oklch(0.38 0.01 60);
+  --ink-3: oklch(0.58 0.01 60);
+  --ink-4: oklch(0.78 0.01 60);
+  --line: oklch(0.9 0.015 85);
+  --line-2: oklch(0.84 0.02 85);
+
+  /* Accents */
+  --accent: oklch(0.82 0.16 82);           /* warm saffron */
+  --accent-ink: oklch(0.28 0.1 70);
+  --accent-soft: oklch(0.94 0.06 85);
+  --mint: oklch(0.82 0.11 155);
+  --mint-soft: oklch(0.94 0.05 155);
+  --mint-ink: oklch(0.35 0.08 155);
+  --plum: oklch(0.55 0.15 310);
+  --plum-soft: oklch(0.94 0.04 310);
+  --sky: oklch(0.82 0.09 230);
+  --sky-soft: oklch(0.95 0.03 230);
+
+  /* Shadows */
+  --sh-1: 0 1px 2px oklch(0.2 0.02 60 / 0.05), 0 1px 3px oklch(0.2 0.02 60 / 0.04);
+  --sh-2: 0 4px 12px oklch(0.2 0.02 60 / 0.06), 0 2px 4px oklch(0.2 0.02 60 / 0.04);
+  --sh-3: 0 20px 40px oklch(0.2 0.02 60 / 0.08), 0 8px 16px oklch(0.2 0.02 60 / 0.05);
+  --sh-pop: 0 30px 80px oklch(0.2 0.02 60 / 0.15);
+}
+
+[data-theme="dark"] {
+  --bg: oklch(0.16 0.015 260);
+  --bg-raised: oklch(0.21 0.02 260);
+  --bg-sunken: oklch(0.13 0.015 260);
+  --bg-inset: oklch(0.24 0.02 260);
+  --ink: oklch(0.97 0.01 85);
+  --ink-2: oklch(0.78 0.01 85);
+  --ink-3: oklch(0.58 0.015 85);
+  --ink-4: oklch(0.4 0.02 260);
+  --line: oklch(0.28 0.02 260);
+  --line-2: oklch(0.35 0.025 260);
+
+  --accent: oklch(0.82 0.16 82);
+  --accent-ink: oklch(0.22 0.08 70);
+  --accent-soft: oklch(0.32 0.08 70);
+  --mint: oklch(0.82 0.11 155);
+  --mint-soft: oklch(0.3 0.06 155);
+  --mint-ink: oklch(0.85 0.11 155);
+  --plum: oklch(0.72 0.13 310);
+  --plum-soft: oklch(0.3 0.08 310);
+  --sky: oklch(0.78 0.1 230);
+  --sky-soft: oklch(0.28 0.05 230);
+
+  --sh-1: 0 1px 2px oklch(0 0 0 / 0.3);
+  --sh-2: 0 4px 12px oklch(0 0 0 / 0.3), 0 2px 4px oklch(0 0 0 / 0.2);
+  --sh-3: 0 20px 40px oklch(0 0 0 / 0.4), 0 8px 16px oklch(0 0 0 / 0.25);
+  --sh-pop: 0 30px 80px oklch(0 0 0 / 0.5);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.01em;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+input, textarea { font: inherit; color: inherit; }
+
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+/* ============================================
+   LOGO
+   ============================================ */
+
+.lp-logo {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+}
+.lp-logo svg { height: 100%; width: auto; display: block; }
+.lp-logo .lp-logo-ink { fill: var(--ink); }
+.lp-logo .lp-logo-line { stroke: var(--ink); }
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: var(--r-pill);
+  font-weight: 550;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  transition: transform 0.12s ease, background 0.18s ease, box-shadow 0.18s ease;
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: var(--sh-1);
+}
+.btn-primary:hover { box-shadow: var(--sh-2); }
+
+.btn-accent {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 4px 0 oklch(0.6 0.15 70), var(--sh-1);
+}
+.btn-accent:hover {
+  box-shadow: 0 6px 0 oklch(0.6 0.15 70), var(--sh-2);
+}
+.btn-accent:active {
+  box-shadow: 0 2px 0 oklch(0.6 0.15 70), var(--sh-1);
+  transform: translateY(2px);
+}
+
+.btn-ghost { color: var(--ink); }
+.btn-ghost:hover { background: var(--bg-inset); }
+
+.btn-outline {
+  color: var(--ink);
+  border: 1px solid var(--line-2);
+  background: var(--bg-raised);
+}
+.btn-outline:hover { border-color: var(--ink); }
+
+.btn-lg { padding: 16px 28px; font-size: 17px; }
+.btn-sm { padding: 8px 14px; font-size: 13px; }
+.btn-block { width: 100%; }
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+.mono { font-family: var(--font-mono); letter-spacing: 0; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--bg-inset);
+  color: var(--ink-2);
+}
+.pill-accent { background: var(--accent-soft); color: var(--accent-ink); }
+.pill-mint { background: var(--mint-soft); color: var(--mint-ink); }
+
+.dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+
+/* Striped image placeholder */
+.placeholder-img {
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--bg-inset),
+      var(--bg-inset) 10px,
+      var(--bg-sunken) 10px,
+      var(--bg-sunken) 20px
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.placeholder-img::before {
+  content: attr(data-label);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  background: var(--bg-raised);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  letter-spacing: -0.02em;
+  z-index: 1;
+}
+
+/* Input */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.field input, .field textarea {
+  padding: 12px 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-size: 15px;
+}
+.field input:focus, .field textarea:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Focus ring */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* Scrollbar (subtle) */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+
+/* ============================================
+   LEARNING+ — Screen styles
+   ============================================ */
+
+/* ---------- Tweaks panel ---------- */
+.tweaks-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-3);
+  padding: 16px;
+  width: 280px;
+  display: none;
+}
+.tweaks-panel.is-open { display: block; }
+.tweaks-h {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.tweaks-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.tweaks-label {
+  font-size: 12px;
+  color: var(--ink-2);
+  display: flex;
+  justify-content: space-between;
+}
+.tweaks-swatches { display: flex; gap: 6px; }
+.tweaks-swatch {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  cursor: pointer;
+}
+.tweaks-swatch.is-on { border-color: var(--ink); transform: scale(1.1); }
+.tweaks-seg {
+  display: flex;
+  background: var(--bg-inset);
+  border-radius: var(--r-sm);
+  padding: 3px;
+  gap: 2px;
+}
+.tweaks-seg button {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  color: var(--ink-2);
+}
+.tweaks-seg button.is-on {
+  background: var(--bg-raised);
+  color: var(--ink);
+  box-shadow: var(--sh-1);
+}
+
+/* ---------- Screen switcher (dev nav) ---------- */
+.screen-nav {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+  box-shadow: var(--sh-2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.screen-nav.is-visible { opacity: 1; pointer-events: auto; }
+.screen-nav button {
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--ink-2);
+  letter-spacing: -0.01em;
+}
+.screen-nav button.is-on {
+  background: var(--ink);
+  color: var(--bg);
+}
+.screen-nav-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--sh-1);
+  color: var(--ink-2);
+}
+
+/* ---------- Theme toggle ---------- */
+.theme-toggle {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg-inset);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-2);
+  transition: background 0.15s ease;
+}
+.theme-toggle:hover { background: var(--line); color: var(--ink); }
+
+/* ---------- Avatars ---------- */
+.avatar-sm, .avatar-md {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  font-weight: 600;
+  border-radius: 50%;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.avatar-sm { width: 28px; height: 28px; font-size: 11px; border: 2px solid var(--bg); }
+.avatar-md { width: 44px; height: 44px; font-size: 15px; }
+
+/* ============================================
+   LANDING
+   ============================================ */
+
+.landing { overflow-x: hidden; }
+
+/* Top nav */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: background 0.2s ease, backdrop-filter 0.2s ease, border-color 0.2s ease;
+  border-bottom: 1px solid transparent;
+}
+.topnav.is-scrolled {
+  background: color-mix(in oklch, var(--bg) 80%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--line);
+}
+.topnav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.topnav-logo { cursor: pointer; margin-right: auto; }
+.topnav-links {
+  display: flex;
+  gap: 28px;
+}
+.topnav-links a {
+  font-size: 14px;
+  color: var(--ink-2);
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+.topnav-links a:hover { color: var(--ink); }
+.topnav-actions { display: flex; align-items: center; gap: 8px; }
+
+/* Hero */
+.hero {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 32px 120px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+}
+.hero-blob-1 {
+  width: 500px; height: 500px;
+  background: var(--accent);
+  top: -100px; right: -100px;
+  opacity: 0.3;
+}
+.hero-blob-2 {
+  width: 400px; height: 400px;
+  background: var(--mint);
+  bottom: -150px; left: -100px;
+  opacity: 0.25;
+}
+[data-theme="dark"] .hero-blob-1 { opacity: 0.2; }
+[data-theme="dark"] .hero-blob-2 { opacity: 0.15; }
+
+.hero-inner { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-bottom: 32px;
+  box-shadow: var(--sh-1);
+}
+.hero-title {
+  font-size: clamp(48px, 6vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+.hero-title-accent {
+  background: linear-gradient(105deg, var(--accent) 20%, var(--plum) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: italic;
+  font-weight: 600;
+}
+.hero-sub {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 520px;
+  margin: 0 0 36px;
+}
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.hero-proof {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-avatars {
+  display: flex;
+}
+.hero-avatars .avatar-sm + .avatar-sm { margin-left: -8px; }
+.hero-proof-text {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.hero-proof-text strong { color: var(--ink); }
+
+/* Hero card */
+.hero-card-wrap {
+  position: relative;
+  z-index: 1;
+  height: 540px;
+}
+.hero-card {
+  background: var(--bg-raised);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-pop);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.hero-card-main {
+  position: absolute;
+  top: 40px;
+  left: 30px;
+  width: 380px;
+  transform: rotate(-2deg);
+}
+.hero-card-thumb {
+  height: 180px;
+  border-radius: 0;
+}
+.hero-card-body { padding: 18px 20px 20px; }
+.hero-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 10px 0 8px;
+  line-height: 1.2;
+}
+.hero-card-meta {
+  font-size: 13px;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.hero-progress {
+  height: 6px;
+  background: var(--bg-inset);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.hero-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--plum));
+  border-radius: var(--r-pill);
+  transition: width 0.5s ease;
+}
+.hero-card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.float-chip {
+  position: absolute;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--sh-2);
+  font-size: 13px;
+}
+.float-chip-title { font-weight: 600; color: var(--ink); }
+.float-chip-sub { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+.float-cert {
+  top: 280px;
+  right: 0;
+  transform: rotate(3deg);
+}
+.float-cert-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.float-streak {
+  top: 0;
+  right: 60px;
+  transform: rotate(4deg);
+  color: var(--accent);
+}
+.float-streak .float-chip-title { color: var(--ink); }
+.float-quiz {
+  bottom: 40px;
+  left: 60px;
+  transform: rotate(-4deg);
+}
+.quiz-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 4px var(--mint-soft);
+}
+
+/* Marquee */
+.marquee {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-sunken);
+  padding: 20px 0;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(90deg, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);
+}
+.marquee-track {
+  display: flex;
+  gap: 40px;
+  animation: marquee 50s linear infinite;
+  white-space: nowrap;
+  width: max-content;
+}
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Section head */
+.section-head {
+  max-width: 800px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+.section-head .pill {
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: clamp(34px, 4.5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* Features */
+.features {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 120px 32px;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.feature-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 32px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sh-3);
+}
+.feature-tag {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+.feature-title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 24px 0 12px;
+  line-height: 1.15;
+}
+.feature-body {
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.feature-art {
+  height: 180px;
+  background: var(--bg-sunken);
+  border-radius: var(--r-md);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.fart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  height: 100%;
+}
+.fart-tile {
+  background: var(--bg-raised);
+  border-radius: var(--r-sm);
+  padding: 8px;
+  display: flex;
+  align-items: flex-end;
+}
+.fart-tile-bar {
+  height: 4px;
+  width: 40%;
+  border-radius: var(--r-pill);
+}
+.fart-quiz {
+  background: var(--bg-raised);
+  border-radius: var(--r-sm);
+  padding: 14px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fart-q {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+.fart-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+}
+.fart-opt-correct {
+  background: var(--mint-soft);
+  border-color: var(--mint);
+  color: var(--mint-ink);
+  font-weight: 500;
+}
+.fart-opt-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+.fart-opt-correct .fart-opt-dot { border: none; }
+.fart-cert {
+  background: var(--bg-raised);
+  border-radius: var(--r-sm);
+  height: 100%;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.fart-cert-ribbon {
+  position: absolute;
+  top: 0; right: 16px;
+  width: 8px;
+  height: 40px;
+  border-radius: 0 0 4px 4px;
+}
+.fart-cert-seal {
+  width: 44px; height: 44px;
+  border: 2px solid;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.fart-cert-line {
+  height: 4px;
+  background: var(--line);
+  border-radius: var(--r-pill);
+  margin-bottom: 8px;
+}
+
+/* Catalog */
+.catalog {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 32px 120px;
+}
+.catalog-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  text-align: left;
+  max-width: none;
+  margin-bottom: 40px;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.catalog-head .section-title { font-size: clamp(30px, 3.6vw, 42px); margin-top: 12px; }
+.catalog-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chip {
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  background: var(--bg-inset);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+.chip:hover { color: var(--ink); }
+.chip.is-active {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.course-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.course-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sh-2);
+}
+.course-thumb {
+  height: 180px;
+  position: relative;
+  background: var(--tint, var(--bg-inset));
+}
+.course-level {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--bg-raised);
+  color: var(--ink);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 500;
+  z-index: 2;
+}
+.course-body { padding: 18px 20px 22px; }
+.course-cat {
+  font-size: 11px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.course-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  text-wrap: balance;
+}
+.course-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.course-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.catalog-more {
+  text-align: center;
+  margin-top: 40px;
+}
+
+/* How it works */
+.how {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 32px;
+}
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  position: relative;
+}
+.how-grid::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--line-2) 0, var(--line-2) 6px, transparent 6px, transparent 12px);
+  z-index: 0;
+}
+.how-step { position: relative; z-index: 1; }
+.how-n {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  box-shadow: 0 3px 0 oklch(0.6 0.15 70);
+}
+.how-t {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+.how-s {
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Testimonial + stats */
+.testi {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 32px;
+}
+.testi-card {
+  background: var(--bg-raised);
+  border-radius: var(--r-xl);
+  padding: 56px;
+  max-width: 900px;
+  margin: 0 auto 60px;
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-2);
+}
+.testi-quote {
+  font-size: 26px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 24px 0 32px;
+  font-weight: 400;
+  text-wrap: pretty;
+}
+.testi-who {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.testi-name { font-weight: 600; }
+.testi-role { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  padding: 40px 0 0;
+  border-top: 1px solid var(--line);
+}
+.stat-num {
+  font-size: 54px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.stat-unit {
+  font-size: 28px;
+  color: var(--ink-3);
+  font-weight: 500;
+  margin-left: 2px;
+}
+.stat-lbl {
+  color: var(--ink-2);
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* CTA strip */
+.cta {
+  max-width: 1280px;
+  margin: 40px auto 80px;
+  padding: 0 32px;
+}
+.cta-inner {
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: var(--r-xl);
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+.cta-inner::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  opacity: 0.4;
+}
+.cta-title {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+}
+.cta-sub { color: color-mix(in oklch, var(--bg) 70%, var(--ink)); font-size: 16px; margin: 0; }
+.cta-actions {
+  display: flex;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+}
+.cta .btn-ghost { color: var(--bg); }
+.cta .btn-ghost:hover { background: color-mix(in oklch, var(--bg) 10%, transparent); }
+
+/* Footer */
+.foot {
+  border-top: 1px solid var(--line);
+  background: var(--bg-sunken);
+  padding: 60px 32px 40px;
+}
+.foot-top {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--line);
+}
+.foot-tag {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 16px 0 0;
+  max-width: 260px;
+}
+.foot-cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+.foot-h {
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+.foot-cols a {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-2);
+  padding: 6px 0;
+  cursor: pointer;
+}
+.foot-cols a:hover { color: var(--ink); }
+.foot-bot {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* ============================================
+   ONBOARDING
+   ============================================ */
+
+.onb {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+.onb-top {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--line);
+}
+.onb-logo { cursor: pointer; }
+.onb-progress-wrap {
+  flex: 1;
+  height: 4px;
+  background: var(--bg-inset);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+.onb-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: var(--r-pill);
+  transition: width 0.4s cubic-bezier(.2,.9,.3,1);
+}
+.onb-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+}
+.onb-slide {
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+  animation: onb-fade 0.4s ease;
+}
+@keyframes onb-fade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.onb-h1 {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+.onb-lead {
+  color: var(--ink-2);
+  font-size: 17px;
+  line-height: 1.5;
+  max-width: 500px;
+  margin: 0 auto 40px;
+}
+.onb-foot {
+  text-align: center;
+  padding: 20px;
+  color: var(--ink-3);
+  font-size: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.onb-slide-welcome .onb-welcome-art {
+  position: relative;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.welcome-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.confetti {
+  position: absolute;
+  left: var(--x);
+  top: -10px;
+  width: 8px;
+  height: 12px;
+  background: var(--c);
+  border-radius: 2px;
+  animation: confetti-fall 3s linear var(--d) infinite;
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(180px) rotate(720deg); opacity: 0; }
+}
+
+.onb-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  margin-bottom: 40px;
+}
+.onb-choice {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  background: var(--bg-raised);
+  border: 2px solid var(--line);
+  border-radius: var(--r-lg);
+  transition: all 0.15s ease;
+  text-align: left;
+}
+.onb-choice:hover { border-color: var(--line-2); }
+.onb-choice.is-active {
+  border-color: var(--ink);
+  background: var(--bg-raised);
+}
+.onb-choice-emoji { font-size: 28px; }
+.onb-choice-text { flex: 1; }
+.onb-choice-t { font-weight: 600; font-size: 16px; letter-spacing: -0.01em; }
+.onb-choice-s { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.onb-choice-check {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg);
+  flex-shrink: 0;
+}
+.onb-choice.is-active .onb-choice-check {
+  border: none;
+  background: var(--ink);
+}
+
+.onb-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.onb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--bg-raised);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-pill);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+.onb-chip:hover { border-color: var(--line-2); }
+.onb-chip.is-active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+.onb-freq-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 40px;
+}
+.onb-freq {
+  position: relative;
+  padding: 28px 20px 24px;
+  background: var(--bg-raised);
+  border: 2px solid var(--line);
+  border-radius: var(--r-lg);
+  transition: all 0.15s ease;
+}
+.onb-freq:hover { border-color: var(--line-2); }
+.onb-freq.is-active { border-color: var(--ink); }
+.onb-freq-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-size: 10px;
+  font-weight: 600;
+}
+.onb-freq-art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 70px;
+  margin-bottom: 16px;
+}
+.onb-freq-bar {
+  width: 10px;
+  background: var(--accent);
+  border-radius: var(--r-pill);
+  display: block;
+}
+.onb-freq-t { font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
+.onb-freq-s { font-size: 12px; color: var(--ink-3); margin-top: 4px; }
+
+.onb-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.onb-nav-hint { color: var(--ink-3); font-size: 12px; }
+
+.onb-slide-ready .ready-icon,
+.ready-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--mint);
+  color: var(--mint-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 4px 0 oklch(0.65 0.08 155);
+}
+.ready-preview {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  text-align: left;
+  margin-bottom: 32px;
+}
+.ready-preview-h {
+  font-size: 10px;
+  color: var(--ink-3);
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+.ready-course {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+.ready-course-thumb {
+  height: 80px;
+  border-radius: var(--r-sm);
+}
+.ready-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ============================================
+   AUTH
+   ============================================ */
+
+.auth {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg);
+}
+.auth-side {
+  position: relative;
+  padding: 40px;
+  background: linear-gradient(170deg, var(--accent-soft) 0%, var(--mint-soft) 100%);
+  display: flex;
+  flex-direction: column;
+}
+[data-theme="dark"] .auth-side {
+  background: linear-gradient(170deg, var(--bg-inset) 0%, var(--bg-sunken) 100%);
+}
+.auth-logo {
+  cursor: pointer;
+  align-self: flex-start;
+}
+.auth-side-inner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+.auth-quote-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 28px;
+  max-width: 420px;
+  box-shadow: var(--sh-pop);
+  position: relative;
+}
+.auth-quote-tag {
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+.auth-quote-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+.auth-quote-avatar::before { font-size: 9px; }
+.auth-quote-who { margin-bottom: 18px; }
+.auth-quote-name { font-weight: 600; font-size: 16px; }
+.auth-quote-role { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.auth-quote-text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0 0 24px;
+  text-wrap: pretty;
+}
+.auth-quote-foot {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.auth-quote-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.auth-quote-stat-num {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.auth-quote-stat-lbl {
+  font-size: 10px;
+  color: var(--ink-3);
+  line-height: 1.2;
+}
+.auth-side-foot {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.auth-main {
+  padding: 24px 40px;
+  display: flex;
+  flex-direction: column;
+}
+.auth-main-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.auth-switch {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.auth-switch a {
+  color: var(--ink);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.auth-form-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+}
+.auth-title {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 12px;
+}
+.auth-sub {
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 28px;
+}
+.auth-oauth { margin-bottom: 20px; }
+.auth-sep {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+.auth-sep::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--line);
+}
+.auth-sep span {
+  position: relative;
+  background: var(--bg);
+  padding: 0 12px;
+  font-size: 12px;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+}
+.auth-form .field { margin-bottom: 16px; }
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.auth-link {
+  font-size: 12px;
+  color: var(--ink-2);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.auth-link:hover { color: var(--ink); }
+
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.auth-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 8px 0 24px;
+  cursor: pointer;
+}
+.auth-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ink);
+}
+.auth-legal {
+  font-size: 10px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.pw-strength {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 11px;
+}
+.pw-bars {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+}
+.pw-bar {
+  height: 3px;
+  flex: 1;
+  background: var(--line);
+  border-radius: var(--r-pill);
+  transition: background 0.2s ease;
+}
+.pw-strength[data-level="1"] .pw-bar.is-on { background: oklch(0.72 0.15 25); }
+.pw-strength[data-level="2"] .pw-bar.is-on { background: oklch(0.78 0.14 60); }
+.pw-strength[data-level="3"] .pw-bar.is-on { background: oklch(0.78 0.14 110); }
+.pw-strength[data-level="4"] .pw-bar.is-on { background: var(--mint); }
+.pw-label { color: var(--ink-3); font-size: 11px; }
+
+.auth-sent {
+  text-align: center;
+}
+.auth-sent-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 960px) {
+  .hero { grid-template-columns: 1fr; padding: 40px 24px 80px; }
+  .hero-card-wrap { display: none; }
+  .features-grid, .catalog-grid, .how-grid, .stats, .foot-cols { grid-template-columns: repeat(2, 1fr); }
+  .auth { grid-template-columns: 1fr; }
+  .auth-side { display: none; }
+  .topnav-links { display: none; }
+  .onb-freq-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .features-grid, .catalog-grid, .how-grid, .stats, .foot-cols, .auth-row { grid-template-columns: 1fr; }
+  .foot-top { grid-template-columns: 1fr; }
+  .cta-inner { padding: 32px; flex-direction: column; align-items: flex-start; }
+  .cta-title { font-size: 32px; }
+  .testi-card { padding: 32px 24px; }
+  .testi-quote { font-size: 20px; }
+}
+
+</style>
+
+<script>
+  // Pre-hydrate theme to avoid flash
+  (function() {
+    const stored = localStorage.getItem('lp-theme');
+    if (stored === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  })();
+</script>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+// Learning+ logo — geometric wordmark with continuous underline stroke
+function LPLogo({ size = 28, className = '' }) {
+  return (
+    <span className={`lp-logo ${className}`} style={{ height: size }}>
+      <svg viewBox="0 0 220 44" xmlns="http://www.w3.org/2000/svg" aria-label="Learning+">
+        {/* continuous thin underline stroke that loops below letters */}
+        <path
+          d="M 10 32 L 200 32 Q 212 32 212 24 Q 212 16 200 16 L 196 16"
+          fill="none"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          className="lp-logo-line"
+        />
+        {/* Wordmark — geometric sans, heavy weight, tight tracking */}
+        <text
+          x="10"
+          y="28"
+          fontFamily="'Inter Tight', sans-serif"
+          fontWeight="800"
+          fontSize="28"
+          letterSpacing="-0.04em"
+          className="lp-logo-ink"
+          style={{ fontStretch: 'condensed' }}
+        >
+          LEARNING
+        </text>
+        {/* plus glyph */}
+        <text
+          x="178"
+          y="22"
+          fontFamily="'Inter Tight', sans-serif"
+          fontWeight="700"
+          fontSize="22"
+          className="lp-logo-ink"
+        >
+          +
+        </text>
+      </svg>
+    </span>
+  );
+}
+
+// Mark-only variant (for favicon-ish uses)
+function LPMark({ size = 32 }) {
+  return (
+    <span className="lp-logo" style={{ height: size }}>
+      <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="40" height="40" rx="12" className="lp-logo-ink" />
+        <text
+          x="22" y="30"
+          textAnchor="middle"
+          fontFamily="'Inter Tight', sans-serif"
+          fontWeight="800"
+          fontSize="24"
+          fill="var(--bg)"
+          letterSpacing="-0.04em"
+        >
+          L+
+        </text>
+      </svg>
+    </span>
+  );
+}
+
+window.LPLogo = LPLogo;
+window.LPMark = LPMark;
+
+
+// ---------------- next file ----------------
+
+// Shared icons — stroke-based, 1.6 stroke, 24px viewBox
+const iconProps = {
+  width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none',
+  stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round',
+};
+
+const Ico = {
+  play: (p = {}) => <svg {...iconProps} {...p}><path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/></svg>,
+  arrow: (p = {}) => <svg {...iconProps} {...p}><path d="M5 12h14M13 6l6 6-6 6"/></svg>,
+  arrowLeft: (p = {}) => <svg {...iconProps} {...p}><path d="M19 12H5M11 6l-6 6 6 6"/></svg>,
+  check: (p = {}) => <svg {...iconProps} {...p}><path d="M20 6L9 17l-5-5"/></svg>,
+  plus: (p = {}) => <svg {...iconProps} {...p}><path d="M12 5v14M5 12h14"/></svg>,
+  search: (p = {}) => <svg {...iconProps} {...p}><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>,
+  home: (p = {}) => <svg {...iconProps} {...p}><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg>,
+  book: (p = {}) => <svg {...iconProps} {...p}><path d="M4 4v16a2 2 0 012-2h14V4H6a2 2 0 00-2 2z"/><path d="M4 18h16"/></svg>,
+  award: (p = {}) => <svg {...iconProps} {...p}><circle cx="12" cy="9" r="6"/><path d="M8.5 14l-1.5 7 5-3 5 3-1.5-7"/></svg>,
+  sparkle: (p = {}) => <svg {...iconProps} {...p}><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg>,
+  bell: (p = {}) => <svg {...iconProps} {...p}><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>,
+  user: (p = {}) => <svg {...iconProps} {...p}><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>,
+  settings: (p = {}) => <svg {...iconProps} {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1A1.7 1.7 0 004.6 9a1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>,
+  close: (p = {}) => <svg {...iconProps} {...p}><path d="M18 6L6 18M6 6l12 12"/></svg>,
+  menu: (p = {}) => <svg {...iconProps} {...p}><path d="M4 6h16M4 12h16M4 18h16"/></svg>,
+  sun: (p = {}) => <svg {...iconProps} {...p}><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>,
+  moon: (p = {}) => <svg {...iconProps} {...p}><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>,
+  clock: (p = {}) => <svg {...iconProps} {...p}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>,
+  flame: (p = {}) => <svg {...iconProps} {...p}><path d="M12 2s4 5 4 9a4 4 0 01-8 0c0-1 .5-2 1-3-2 1-4 3-4 6a7 7 0 0014 0c0-5-7-12-7-12z"/></svg>,
+  google: (p = {}) => <svg width="18" height="18" viewBox="0 0 48 48" {...p}>
+    <path fill="#4285F4" d="M45 24.5c0-1.6-.1-3.2-.4-4.7H24v9h11.8c-.5 2.7-2 5-4.3 6.5v5.4h7c4.1-3.8 6.5-9.4 6.5-16.2z"/>
+    <path fill="#34A853" d="M24 46c5.8 0 10.7-1.9 14.3-5.3l-7-5.4c-1.9 1.3-4.4 2.1-7.3 2.1-5.6 0-10.4-3.8-12.1-8.9H4.7v5.6A22 22 0 0024 46z"/>
+    <path fill="#FBBC05" d="M11.9 28.5A13 13 0 0111.2 24c0-1.6.3-3.1.7-4.5v-5.6H4.7a22 22 0 000 20.2l7.2-5.6z"/>
+    <path fill="#EA4335" d="M24 11a12 12 0 018.4 3.3l6.3-6.3A22 22 0 004.7 13.9l7.2 5.6C13.6 14.8 18.4 11 24 11z"/>
+  </svg>,
+  star: (p = {}) => <svg {...iconProps} {...p}><path d="M12 2l3 7 7 .7-5.3 4.7 1.6 7.2L12 18l-6.3 3.6 1.6-7.2L2 9.7 9 9z" fill="currentColor" stroke="none"/></svg>,
+  dots: (p = {}) => <svg {...iconProps} {...p}><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="19" cy="12" r="1.2" fill="currentColor"/></svg>,
+};
+
+window.Ico = Ico;
+
+
+// ---------------- next file ----------------
+
+// ============================================
+// LEARNING+ — Landing page
+// ============================================
+
+function Landing({ go }) {
+  return (
+    <div className="landing">
+      <TopNav go={go} />
+      <Hero go={go} />
+      <Marquee />
+      <Features />
+      <CatalogPreview />
+      <HowItWorks />
+      <Testimonial />
+      <CTAStrip go={go} />
+      <Footer />
+    </div>
+  );
+}
+
+function TopNav({ go }) {
+  const [scrolled, setScrolled] = React.useState(false);
+  React.useEffect(() => {
+    const h = () => setScrolled(window.scrollY > 8);
+    h();
+    window.addEventListener('scroll', h);
+    return () => window.removeEventListener('scroll', h);
+  }, []);
+
+  return (
+    <header className={`topnav ${scrolled ? 'is-scrolled' : ''}`}>
+      <div className="topnav-inner">
+        <a className="topnav-logo" onClick={() => go('landing')}>
+          <LPLogo />
+        </a>
+        <nav className="topnav-links">
+          <a href="#catalog">Catalogue</a>
+          <a href="#how">Comment ça marche</a>
+          <a href="#entreprises">Pour les entreprises</a>
+          <a href="#tarifs">Tarifs</a>
+        </nav>
+        <div className="topnav-actions">
+          <ThemeToggle />
+          <button className="btn btn-ghost btn-sm" onClick={() => go('signin')}>Se connecter</button>
+          <button className="btn btn-accent btn-sm" onClick={() => go('signup')}>
+            Commencer
+            <Ico.arrow width="16" height="16" />
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function ThemeToggle() {
+  const [dark, setDark] = React.useState(
+    () => document.documentElement.getAttribute('data-theme') === 'dark'
+  );
+  const toggle = () => {
+    const next = dark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('lp-theme', next);
+    setDark(!dark);
+  };
+  return (
+    <button className="theme-toggle" onClick={toggle} aria-label="Basculer le thème">
+      {dark ? <Ico.sun width="16" height="16" /> : <Ico.moon width="16" height="16" />}
+    </button>
+  );
+}
+
+function Hero({ go }) {
+  return (
+    <section className="hero">
+      <div className="hero-bg" aria-hidden>
+        <div className="hero-blob hero-blob-1"></div>
+        <div className="hero-blob hero-blob-2"></div>
+      </div>
+      <div className="hero-inner">
+        <div className="hero-badge">
+          <span className="dot" style={{ background: 'var(--mint)' }}></span>
+          <span className="mono">NOUVEAU · Certificats v2 disponibles</span>
+        </div>
+        <h1 className="hero-title">
+          Apprenez des choses<br/>
+          <span className="hero-title-accent">concrètes.</span><br/>
+          À votre rythme.
+        </h1>
+        <p className="hero-sub">
+          Learning+ est la plateforme de formation qui vous accompagne sur le terrain —
+          de l'impression murale à Photoshop, en passant par l'entretien de votre matériel.
+          Des formateurs pros. Des cours courts. Des certificats qui comptent.
+        </p>
+        <div className="hero-actions">
+          <button className="btn btn-accent btn-lg" onClick={() => go('onboarding')}>
+            Commencer gratuitement
+            <Ico.arrow />
+          </button>
+          <button className="btn btn-outline btn-lg" onClick={() => go('signin')}>
+            <Ico.play width="18" height="18" />
+            Voir une démo
+          </button>
+        </div>
+        <div className="hero-proof">
+          <div className="hero-avatars">
+            {['#F4B942','#85C7A6','#B49FE5','#6FA8DC','#E88D8D'].map((c, i) => (
+              <span key={i} className="avatar-sm" style={{ background: c }}>{['M','T','L','R','A'][i]}</span>
+            ))}
+          </div>
+          <div className="hero-proof-text">
+            <strong>12 840 apprenants</strong> se forment cette semaine sur Learning+
+          </div>
+        </div>
+      </div>
+
+      <HeroCard />
+    </section>
+  );
+}
+
+function HeroCard() {
+  const [progress, setProgress] = React.useState(62);
+  React.useEffect(() => {
+    const t = setInterval(() => {
+      setProgress(p => p >= 72 ? 62 : p + 1);
+    }, 180);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="hero-card-wrap">
+      {/* Main floating course card */}
+      <div className="hero-card hero-card-main">
+        <div className="hero-card-thumb placeholder-img" data-label="impression_murale.mp4"></div>
+        <div className="hero-card-body">
+          <div className="pill pill-accent">Module 3 · leçon 2</div>
+          <div className="hero-card-title">Les bases de l'impression murale</div>
+          <div className="hero-card-meta">
+            <Ico.clock width="14" height="14" /> 4 min restantes
+          </div>
+          <div className="hero-progress">
+            <div className="hero-progress-bar" style={{ width: `${progress}%` }}></div>
+          </div>
+          <div className="hero-card-foot">
+            <span className="mono">{progress}% terminé</span>
+            <button className="btn btn-primary btn-sm">
+              <Ico.play width="12" height="12" />
+              Reprendre
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating certificate chip */}
+      <div className="float-chip float-cert">
+        <div className="float-cert-icon"><Ico.award width="18" height="18" /></div>
+        <div>
+          <div className="float-chip-title">Certificat débloqué</div>
+          <div className="float-chip-sub mono">Photoshop · Fondamentaux</div>
+        </div>
+      </div>
+
+      {/* Floating streak chip */}
+      <div className="float-chip float-streak">
+        <Ico.flame width="18" height="18" />
+        <div>
+          <div className="float-chip-title">Série de 7 jours</div>
+          <div className="float-chip-sub">Continue comme ça !</div>
+        </div>
+      </div>
+
+      {/* Quiz hint chip */}
+      <div className="float-chip float-quiz">
+        <div className="quiz-dot"></div>
+        <div>
+          <div className="float-chip-title">Quiz validé</div>
+          <div className="float-chip-sub mono">8/10 · +20 XP</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Marquee() {
+  const items = [
+    'Impression murale', 'Photoshop', 'Entretien imprimante', 'Illustrator',
+    'Gestion couleur', 'Calibration', 'Figma', 'InDesign', 'Lightroom',
+    'Préparation de fichier', 'Sérigraphie',
+  ];
+  return (
+    <div className="marquee">
+      <div className="marquee-track">
+        {[...items, ...items].map((t, i) => (
+          <span key={i} className="marquee-item">
+            <span className="dot" style={{ background: 'var(--accent)' }}></span>
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Features() {
+  const features = [
+    {
+      tag: '01', title: 'Un catalogue qui avance avec vous',
+      body: 'Des formations courtes, classées par niveau, avec un chemin clair du débutant au pro. Reprenez où vous vous êtes arrêté — toujours.',
+      accent: 'var(--accent)', art: 'catalog',
+    },
+    {
+      tag: '02', title: 'Des quiz qui ancrent ce que vous apprenez',
+      body: 'QCM, vrai/faux, réponse libre. Correction immédiate, explications, seconde chance. Et un score qui débloque le module suivant.',
+      accent: 'var(--mint)', art: 'quiz',
+    },
+    {
+      tag: '03', title: 'Des certificats que vous pouvez montrer',
+      body: 'Quand vous finissez une formation avec 80%+ et le quiz validé, votre certificat PDF est généré automatiquement. Partageable sur LinkedIn.',
+      accent: 'var(--plum)', art: 'cert',
+    },
+  ];
+
+  return (
+    <section className="features" id="how">
+      <div className="section-head">
+        <span className="pill">Pourquoi Learning+</span>
+        <h2 className="section-title">Apprendre, vraiment. Pas juste regarder des vidéos.</h2>
+      </div>
+      <div className="features-grid">
+        {features.map(f => (
+          <div key={f.tag} className="feature-card">
+            <div className="feature-tag mono" style={{ color: f.accent }}>{f.tag}</div>
+            <FeatureArt kind={f.art} accent={f.accent} />
+            <h3 className="feature-title">{f.title}</h3>
+            <p className="feature-body">{f.body}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FeatureArt({ kind, accent }) {
+  if (kind === 'catalog') {
+    return (
+      <div className="feature-art">
+        <div className="fart-grid">
+          {[1,2,3,4,5,6].map(i => (
+            <div key={i} className="fart-tile" style={{ opacity: 0.4 + i * 0.1 }}>
+              <div className="fart-tile-bar" style={{ background: i === 4 ? accent : 'var(--line-2)' }}></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (kind === 'quiz') {
+    return (
+      <div className="feature-art">
+        <div className="fart-quiz">
+          <div className="fart-q">Question 3/8</div>
+          <div className="fart-opt fart-opt-correct">
+            <div className="fart-opt-dot" style={{ background: accent }}>
+              <Ico.check width="10" height="10" />
+            </div>
+            72 DPI
+          </div>
+          <div className="fart-opt">
+            <div className="fart-opt-dot"></div>
+            150 DPI
+          </div>
+          <div className="fart-opt">
+            <div className="fart-opt-dot"></div>
+            300 DPI
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (kind === 'cert') {
+    return (
+      <div className="feature-art">
+        <div className="fart-cert">
+          <div className="fart-cert-ribbon" style={{ background: accent }}></div>
+          <div className="fart-cert-seal" style={{ borderColor: accent }}>
+            <Ico.award width="22" height="22" />
+          </div>
+          <div className="fart-cert-line" style={{ width: '60%' }}></div>
+          <div className="fart-cert-line" style={{ width: '80%' }}></div>
+          <div className="fart-cert-line" style={{ width: '40%' }}></div>
+        </div>
+      </div>
+    );
+  }
+}
+
+function CatalogPreview() {
+  const courses = [
+    { title: 'Les bases de l\'impression murale', cat: 'Impression', level: 'Débutant', lessons: 12, hours: '2h 40', img: 'mur_blanc_rouleau.jpg', tint: 'var(--accent-soft)' },
+    { title: 'Entretenir son imprimante murale', cat: 'Maintenance', level: 'Tous niveaux', lessons: 8, hours: '1h 50', img: 'imprimante_tetes.jpg', tint: 'var(--mint-soft)' },
+    { title: 'Photoshop · Fondamentaux', cat: 'Logiciels', level: 'Débutant', lessons: 18, hours: '4h 20', img: 'photoshop_layers.jpg', tint: 'var(--sky-soft)' },
+    { title: 'Préparer un fichier pour l\'impression', cat: 'Prépresse', level: 'Intermédiaire', lessons: 10, hours: '2h 10', img: 'cmyk_bleed.jpg', tint: 'var(--plum-soft)' },
+    { title: 'Gestion de la couleur de A à Z', cat: 'Colorimétrie', level: 'Avancé', lessons: 14, hours: '3h 30', img: 'color_wheel.jpg', tint: 'var(--accent-soft)' },
+    { title: 'Photoshop · Détourage et masques', cat: 'Logiciels', level: 'Intermédiaire', lessons: 9, hours: '2h 00', img: 'mask_tool.jpg', tint: 'var(--mint-soft)' },
+  ];
+
+  return (
+    <section className="catalog" id="catalog">
+      <div className="section-head catalog-head">
+        <div>
+          <span className="pill">Catalogue</span>
+          <h2 className="section-title">Une vraie bibliothèque, pas un fourre-tout</h2>
+        </div>
+        <div className="catalog-filters">
+          <button className="chip is-active">Tout</button>
+          <button className="chip">Impression</button>
+          <button className="chip">Logiciels</button>
+          <button className="chip">Prépresse</button>
+          <button className="chip">Maintenance</button>
+        </div>
+      </div>
+      <div className="catalog-grid">
+        {courses.map((c, i) => <CourseCard key={i} {...c} featured={i === 0} />)}
+      </div>
+      <div className="catalog-more">
+        <button className="btn btn-outline">
+          Voir toutes les formations (62)
+          <Ico.arrow width="16" height="16" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function CourseCard({ title, cat, level, lessons, hours, img, tint, featured }) {
+  return (
+    <article className={`course-card ${featured ? 'is-featured' : ''}`} style={{ '--tint': tint }}>
+      <div className="course-thumb placeholder-img" data-label={img}>
+        <span className="course-level mono">{level}</span>
+      </div>
+      <div className="course-body">
+        <div className="course-cat mono">{cat}</div>
+        <h3 className="course-title">{title}</h3>
+        <div className="course-meta">
+          <span><Ico.book width="13" height="13" /> {lessons} leçons</span>
+          <span><Ico.clock width="13" height="13" /> {hours}</span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function HowItWorks() {
+  const steps = [
+    { n: '1', t: 'Votre accès vous est attribué', s: 'Votre entreprise ou votre formateur vous donne accès aux formations pertinentes. Pas de supermarché infini.' },
+    { n: '2', t: 'Vous apprenez par petits blocs', s: 'Chaque leçon dure 3 à 8 minutes. Vidéo, texte, image, PDF. On alterne pour que vous reteniez.' },
+    { n: '3', t: 'Vous validez avec un quiz', s: 'À la fin de chaque module, un quiz. Score instantané. Si c\'est bon, le module suivant se débloque.' },
+    { n: '4', t: 'Vous obtenez votre certificat', s: 'Formation finie à 80%+ ? Votre certificat PDF arrive dans votre boîte. Gardez-le, partagez-le.' },
+  ];
+
+  return (
+    <section className="how" id="how">
+      <div className="section-head">
+        <span className="pill">Comment ça marche</span>
+        <h2 className="section-title">Quatre étapes. Et c'est tout.</h2>
+      </div>
+      <div className="how-grid">
+        {steps.map((s, i) => (
+          <div key={i} className="how-step">
+            <div className="how-n mono">{s.n}</div>
+            <h3 className="how-t">{s.t}</h3>
+            <p className="how-s">{s.s}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Testimonial() {
+  return (
+    <section className="testi">
+      <div className="testi-card">
+        <Ico.star width="18" height="18" style={{ color: 'var(--accent)' }} />
+        <p className="testi-quote">
+          « J'ai formé mes 14 techniciens sur l'impression grand format en trois semaines.
+          Ils reviennent sur les leçons quand ils en ont besoin. Les quiz nous montrent qui
+          a compris quoi. C'est le premier outil de formation qui ne prend pas la poussière. »
+        </p>
+        <div className="testi-who">
+          <span className="avatar-md" style={{ background: 'var(--accent)' }}>MC</span>
+          <div>
+            <div className="testi-name">Marie Chassagne</div>
+            <div className="testi-role">Responsable atelier · Atelier Vertigo</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="stats">
+        <div className="stat">
+          <div className="stat-num">94<span className="stat-unit">%</span></div>
+          <div className="stat-lbl">de taux de complétion moyen</div>
+        </div>
+        <div className="stat">
+          <div className="stat-num">4.8<span className="stat-unit">/5</span></div>
+          <div className="stat-lbl">note moyenne des formations</div>
+        </div>
+        <div className="stat">
+          <div className="stat-num">62</div>
+          <div className="stat-lbl">formations actives au catalogue</div>
+        </div>
+        <div className="stat">
+          <div className="stat-num">12k<span className="stat-unit">+</span></div>
+          <div className="stat-lbl">apprenants actifs chaque semaine</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CTAStrip({ go }) {
+  return (
+    <section className="cta">
+      <div className="cta-inner">
+        <div>
+          <h2 className="cta-title">Prêt à vous former ?</h2>
+          <p className="cta-sub">
+            14 jours d'essai. Aucune carte requise. Accès au catalogue complet.
+          </p>
+        </div>
+        <div className="cta-actions">
+          <button className="btn btn-accent btn-lg" onClick={() => go('onboarding')}>
+            Créer mon compte
+            <Ico.arrow />
+          </button>
+          <button className="btn btn-ghost btn-lg" onClick={() => go('signin')}>
+            J'ai déjà un compte
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="foot">
+      <div className="foot-top">
+        <div className="foot-brand">
+          <LPLogo size={24} />
+          <p className="foot-tag">Apprendre des choses concrètes, à votre rythme.</p>
+        </div>
+        <div className="foot-cols">
+          <div>
+            <div className="foot-h mono">PRODUIT</div>
+            <a>Catalogue</a><a>Pour les entreprises</a><a>Tarifs</a><a>Nouveautés</a>
+          </div>
+          <div>
+            <div className="foot-h mono">RESSOURCES</div>
+            <a>Blog</a><a>Guides</a><a>Centre d'aide</a><a>Communauté</a>
+          </div>
+          <div>
+            <div className="foot-h mono">ENTREPRISE</div>
+            <a>À propos</a><a>Carrières</a><a>Contact</a><a>Presse</a>
+          </div>
+          <div>
+            <div className="foot-h mono">LÉGAL</div>
+            <a>Conditions</a><a>Confidentialité</a><a>Cookies</a><a>RGPD</a>
+          </div>
+        </div>
+      </div>
+      <div className="foot-bot">
+        <span className="mono">© 2026 Learning+ · Tous droits réservés</span>
+        <span className="mono">Fait avec attention à Paris 🇫🇷</span>
+      </div>
+    </footer>
+  );
+}
+
+window.Landing = Landing;
+
+
+// ---------------- next file ----------------
+
+// ============================================
+// Onboarding — 4 étapes
+// ============================================
+
+function Onboarding({ go }) {
+  const [step, setStep] = React.useState(0);
+  const [answers, setAnswers] = React.useState({
+    role: null, goals: [], freq: null, level: null,
+  });
+
+  const steps = [
+    { key: 'welcome', title: 'Bienvenue sur Learning+' },
+    { key: 'role', title: 'Que faites-vous au quotidien ?' },
+    { key: 'goals', title: 'Qu\'aimeriez-vous apprendre ?' },
+    { key: 'freq', title: 'Combien de temps par semaine ?' },
+    { key: 'ready', title: 'C\'est parti !' },
+  ];
+
+  const next = () => setStep(s => Math.min(s + 1, steps.length - 1));
+  const prev = () => setStep(s => Math.max(s - 1, 0));
+
+  return (
+    <div className="onb">
+      <header className="onb-top">
+        <a className="onb-logo" onClick={() => go('landing')}><LPLogo /></a>
+        <div className="onb-progress-wrap">
+          <div className="onb-progress-bar" style={{ width: `${(step / (steps.length - 1)) * 100}%` }}></div>
+        </div>
+        <button className="btn btn-ghost btn-sm" onClick={() => go('landing')}>
+          <Ico.close width="14" height="14" /> Quitter
+        </button>
+      </header>
+
+      <div className="onb-body">
+        {step === 0 && <OnbWelcome onNext={next} />}
+        {step === 1 && <OnbRole value={answers.role} onChange={v => setAnswers(a => ({ ...a, role: v }))} onNext={next} onPrev={prev} />}
+        {step === 2 && <OnbGoals value={answers.goals} onChange={v => setAnswers(a => ({ ...a, goals: v }))} onNext={next} onPrev={prev} />}
+        {step === 3 && <OnbFreq value={answers.freq} onChange={v => setAnswers(a => ({ ...a, freq: v }))} onNext={next} onPrev={prev} />}
+        {step === 4 && <OnbReady answers={answers} go={go} />}
+      </div>
+
+      <footer className="onb-foot mono">
+        Étape {step + 1} sur {steps.length} · Learning+
+      </footer>
+    </div>
+  );
+}
+
+function OnbWelcome({ onNext }) {
+  return (
+    <div className="onb-slide onb-slide-welcome">
+      <div className="onb-welcome-art">
+        <div className="welcome-confetti">
+          {Array.from({ length: 24 }).map((_, i) => (
+            <span
+              key={i}
+              className="confetti"
+              style={{
+                '--x': `${(i * 37) % 100}%`,
+                '--d': `${(i * 0.13) % 2}s`,
+                '--c': ['var(--accent)','var(--mint)','var(--plum)','var(--sky)'][i % 4],
+              }}
+            ></span>
+          ))}
+        </div>
+        <LPMark size={72} />
+      </div>
+      <h1 className="onb-h1">Bienvenue sur Learning+ 👋</h1>
+      <p className="onb-lead">
+        On va configurer votre espace en 3 petites questions. Ça prend moins d'une minute,
+        et ça nous aide à vous proposer les bonnes formations dès votre première connexion.
+      </p>
+      <button className="btn btn-accent btn-lg" onClick={onNext}>
+        C'est parti
+        <Ico.arrow />
+      </button>
+    </div>
+  );
+}
+
+function OnbRole({ value, onChange, onNext, onPrev }) {
+  const roles = [
+    { k: 'imprimeur', t: 'Imprimeur / technicien', s: 'Impression grand format, murale, sérigraphie', emoji: '🖨️' },
+    { k: 'graphiste', t: 'Graphiste / designer', s: 'Photoshop, Illustrator, InDesign, Figma', emoji: '🎨' },
+    { k: 'manager', t: 'Responsable d\'équipe', s: 'Je forme d\'autres personnes', emoji: '👥' },
+    { k: 'curieux', t: 'Simplement curieux', s: 'J\'apprends pour moi', emoji: '✨' },
+  ];
+  return (
+    <div className="onb-slide">
+      <h1 className="onb-h1">Que faites-vous au quotidien ?</h1>
+      <p className="onb-lead">Pour que les recommandations soient pertinentes.</p>
+      <div className="onb-choices">
+        {roles.map(r => (
+          <button
+            key={r.k}
+            className={`onb-choice ${value === r.k ? 'is-active' : ''}`}
+            onClick={() => onChange(r.k)}
+          >
+            <span className="onb-choice-emoji">{r.emoji}</span>
+            <div className="onb-choice-text">
+              <div className="onb-choice-t">{r.t}</div>
+              <div className="onb-choice-s">{r.s}</div>
+            </div>
+            <span className="onb-choice-check">
+              {value === r.k && <Ico.check width="16" height="16" />}
+            </span>
+          </button>
+        ))}
+      </div>
+      <OnbNav onPrev={onPrev} onNext={onNext} canNext={!!value} />
+    </div>
+  );
+}
+
+function OnbGoals({ value, onChange, onNext, onPrev }) {
+  const goals = [
+    'Impression murale', 'Entretien matériel', 'Photoshop', 'Illustrator',
+    'Gestion de la couleur', 'Préparation de fichier', 'Sérigraphie', 'InDesign',
+    'Lightroom', 'Figma',
+  ];
+  const toggle = (g) => {
+    onChange(value.includes(g) ? value.filter(x => x !== g) : [...value, g]);
+  };
+  return (
+    <div className="onb-slide">
+      <h1 className="onb-h1">Qu'aimeriez-vous apprendre ?</h1>
+      <p className="onb-lead">Choisissez tout ce qui vous intéresse. <span className="mono">(plusieurs réponses)</span></p>
+      <div className="onb-chips">
+        {goals.map(g => (
+          <button
+            key={g}
+            className={`onb-chip ${value.includes(g) ? 'is-active' : ''}`}
+            onClick={() => toggle(g)}
+          >
+            {value.includes(g) && <Ico.check width="14" height="14" />}
+            {g}
+          </button>
+        ))}
+      </div>
+      <OnbNav onPrev={onPrev} onNext={onNext} canNext={value.length > 0} hint={`${value.length} sélectionné${value.length > 1 ? 's' : ''}`} />
+    </div>
+  );
+}
+
+function OnbFreq({ value, onChange, onNext, onPrev }) {
+  const opts = [
+    { k: 'light', t: '15 min / jour', s: 'Doucement mais sûrement', art: 1 },
+    { k: 'medium', t: '30 min / jour', s: 'Le bon rythme pour progresser', art: 2, popular: true },
+    { k: 'pro', t: '1 h / jour', s: 'Je veux apprendre à fond', art: 3 },
+  ];
+  return (
+    <div className="onb-slide">
+      <h1 className="onb-h1">Combien de temps par jour ?</h1>
+      <p className="onb-lead">On vous enverra des rappels doux pour garder le rythme.</p>
+      <div className="onb-freq-grid">
+        {opts.map(o => (
+          <button
+            key={o.k}
+            className={`onb-freq ${value === o.k ? 'is-active' : ''}`}
+            onClick={() => onChange(o.k)}
+          >
+            {o.popular && <span className="onb-freq-badge mono">Recommandé</span>}
+            <div className="onb-freq-art">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <span key={i} className="onb-freq-bar" style={{
+                  opacity: i < o.art ? 1 : 0.2,
+                  height: `${40 + i * 14}px`,
+                }}></span>
+              ))}
+            </div>
+            <div className="onb-freq-t">{o.t}</div>
+            <div className="onb-freq-s">{o.s}</div>
+          </button>
+        ))}
+      </div>
+      <OnbNav onPrev={onPrev} onNext={onNext} canNext={!!value} />
+    </div>
+  );
+}
+
+function OnbReady({ answers, go }) {
+  return (
+    <div className="onb-slide onb-slide-ready">
+      <div className="ready-icon">
+        <Ico.check width="42" height="42" />
+      </div>
+      <h1 className="onb-h1">Votre espace est prêt</h1>
+      <p className="onb-lead">
+        On a préparé une sélection de formations pour vous. Vous pouvez commencer
+        dès maintenant — ou finaliser votre inscription.
+      </p>
+      <div className="ready-preview">
+        <div className="ready-preview-h mono">VOTRE PREMIÈRE FORMATION SUGGÉRÉE</div>
+        <div className="ready-course">
+          <div className="ready-course-thumb placeholder-img" data-label="impression_murale.jpg"></div>
+          <div>
+            <div className="course-cat mono">Impression</div>
+            <div className="course-title">Les bases de l'impression murale</div>
+            <div className="course-meta">
+              <span><Ico.book width="13" height="13" /> 12 leçons</span>
+              <span><Ico.clock width="13" height="13" /> 2h 40</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="ready-actions">
+        <button className="btn btn-accent btn-lg" onClick={() => go('signup')}>
+          Créer mon compte
+          <Ico.arrow />
+        </button>
+        <button className="btn btn-ghost" onClick={() => go('landing')}>
+          Plus tard
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function OnbNav({ onPrev, onNext, canNext, hint }) {
+  return (
+    <div className="onb-nav">
+      <button className="btn btn-ghost" onClick={onPrev}>
+        <Ico.arrowLeft width="16" height="16" />
+        Retour
+      </button>
+      {hint && <span className="onb-nav-hint mono">{hint}</span>}
+      <button className="btn btn-accent" onClick={onNext} disabled={!canNext} style={{ opacity: canNext ? 1 : 0.5 }}>
+        Continuer
+        <Ico.arrow width="16" height="16" />
+      </button>
+    </div>
+  );
+}
+
+window.Onboarding = Onboarding;
+
+
+// ---------------- next file ----------------
+
+// ============================================
+// Auth — Sign in / Sign up / Forgot password
+// ============================================
+
+function AuthShell({ children, go, kind }) {
+  return (
+    <div className="auth">
+      <aside className="auth-side">
+        <a className="auth-logo" onClick={() => go('landing')}>
+          <LPLogo />
+        </a>
+
+        <div className="auth-side-inner">
+          <div className="auth-quote-card">
+            <span className="mono auth-quote-tag">#apprenant_de_la_semaine</span>
+            <div className="auth-quote-avatar placeholder-img" data-label="leo_portrait.jpg"></div>
+            <div className="auth-quote-who">
+              <div className="auth-quote-name">Léo B.</div>
+              <div className="auth-quote-role">Technicien impression · Lyon</div>
+            </div>
+            <p className="auth-quote-text">
+              « J'ai appris à calibrer mes têtes d'impression en regardant 3 vidéos
+              le dimanche. Lundi, on n'a pas eu un seul problème. »
+            </p>
+            <div className="auth-quote-foot">
+              <div className="auth-quote-stat">
+                <span className="mono auth-quote-stat-num">12</span>
+                <span className="auth-quote-stat-lbl">formations<br/>terminées</span>
+              </div>
+              <div className="auth-quote-stat">
+                <span className="mono auth-quote-stat-num">7</span>
+                <span className="auth-quote-stat-lbl">certificats<br/>obtenus</span>
+              </div>
+              <div className="auth-quote-stat">
+                <span className="mono auth-quote-stat-num">41j</span>
+                <span className="auth-quote-stat-lbl">série<br/>active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="auth-side-foot mono">
+          © 2026 Learning+ · Confidentialité · CGU
+        </div>
+      </aside>
+
+      <main className="auth-main">
+        <div className="auth-main-top">
+          <ThemeToggle />
+          {kind === 'signin' && (
+            <span className="mono auth-switch">
+              Nouveau ici ? <a onClick={() => go('signup')}>Créer un compte</a>
+            </span>
+          )}
+          {kind === 'signup' && (
+            <span className="mono auth-switch">
+              Déjà un compte ? <a onClick={() => go('signin')}>Se connecter</a>
+            </span>
+          )}
+          {kind === 'forgot' && (
+            <span className="mono auth-switch">
+              <a onClick={() => go('signin')}>← Retour à la connexion</a>
+            </span>
+          )}
+        </div>
+        <div className="auth-form-wrap">
+          {children}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function SignIn({ go }) {
+  const [email, setEmail] = React.useState('');
+  const [pass, setPass] = React.useState('');
+  return (
+    <AuthShell go={go} kind="signin">
+      <div className="auth-form">
+        <h1 className="auth-title">Content de vous revoir 👋</h1>
+        <p className="auth-sub">Connectez-vous pour reprendre là où vous vous êtes arrêté.</p>
+
+        <button className="btn btn-outline btn-block auth-oauth">
+          <Ico.google />
+          Continuer avec Google
+        </button>
+
+        <div className="auth-sep"><span>ou avec votre email</span></div>
+
+        <div className="field">
+          <label>Adresse email</label>
+          <input type="email" placeholder="vous@entreprise.fr" value={email} onChange={e => setEmail(e.target.value)} />
+        </div>
+        <div className="field">
+          <div className="field-label-row">
+            <label>Mot de passe</label>
+            <a className="auth-link mono" onClick={() => go('forgot')}>Oublié ?</a>
+          </div>
+          <input type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)} />
+        </div>
+
+        <label className="auth-check">
+          <input type="checkbox" defaultChecked />
+          <span>Garder ma session active 30 jours</span>
+        </label>
+
+        <button className="btn btn-accent btn-block btn-lg" onClick={() => go('landing')}>
+          Se connecter
+          <Ico.arrow />
+        </button>
+
+        <p className="auth-legal mono">
+          En continuant, vous acceptez nos CGU et notre politique de confidentialité.
+        </p>
+      </div>
+    </AuthShell>
+  );
+}
+
+function SignUp({ go }) {
+  const [pw, setPw] = React.useState('');
+  const strength = scoreStrength(pw);
+  return (
+    <AuthShell go={go} kind="signup">
+      <div className="auth-form">
+        <h1 className="auth-title">Créez votre compte</h1>
+        <p className="auth-sub">14 jours d'essai, aucune carte bancaire requise.</p>
+
+        <button className="btn btn-outline btn-block auth-oauth">
+          <Ico.google />
+          S'inscrire avec Google
+        </button>
+
+        <div className="auth-sep"><span>ou avec votre email</span></div>
+
+        <div className="auth-row">
+          <div className="field">
+            <label>Prénom</label>
+            <input placeholder="Marie" />
+          </div>
+          <div className="field">
+            <label>Nom</label>
+            <input placeholder="Chassagne" />
+          </div>
+        </div>
+        <div className="field">
+          <label>Adresse email professionnelle</label>
+          <input type="email" placeholder="marie@atelier-vertigo.fr" />
+        </div>
+        <div className="field">
+          <label>Mot de passe</label>
+          <input type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="8 caractères minimum" />
+          <div className="pw-strength" data-level={strength.level}>
+            <div className="pw-bars">
+              {[0,1,2,3].map(i => (
+                <span key={i} className={`pw-bar ${i < strength.score ? 'is-on' : ''}`}></span>
+              ))}
+            </div>
+            <span className="mono pw-label">{strength.label}</span>
+          </div>
+        </div>
+
+        <label className="auth-check">
+          <input type="checkbox" />
+          <span>Je souhaite recevoir les nouveautés et conseils de Learning+ (optionnel)</span>
+        </label>
+
+        <button className="btn btn-accent btn-block btn-lg" onClick={() => go('onboarding')}>
+          Créer mon compte
+          <Ico.arrow />
+        </button>
+
+        <p className="auth-legal mono">
+          En créant un compte, vous acceptez nos CGU et notre politique de confidentialité.
+        </p>
+      </div>
+    </AuthShell>
+  );
+}
+
+function scoreStrength(pw) {
+  if (!pw) return { score: 0, label: 'Entrez votre mot de passe', level: '0' };
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[0-9]/.test(pw) && /[a-zA-Z]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const labels = ['Trop court', 'Faible', 'Correct', 'Fort', 'Excellent'];
+  return { score, label: labels[score], level: String(score) };
+}
+
+function Forgot({ go }) {
+  const [sent, setSent] = React.useState(false);
+  return (
+    <AuthShell go={go} kind="forgot">
+      <div className="auth-form">
+        {!sent ? (
+          <>
+            <h1 className="auth-title">Mot de passe oublié ?</h1>
+            <p className="auth-sub">
+              Entrez votre email, on vous envoie un lien pour en créer un nouveau.
+            </p>
+
+            <div className="field">
+              <label>Adresse email</label>
+              <input type="email" placeholder="vous@entreprise.fr" />
+            </div>
+
+            <button className="btn btn-accent btn-block btn-lg" onClick={() => setSent(true)}>
+              Envoyer le lien de réinitialisation
+              <Ico.arrow />
+            </button>
+
+            <div className="auth-sep"><span>ou</span></div>
+
+            <button className="btn btn-ghost btn-block" onClick={() => go('signin')}>
+              Revenir à la connexion
+            </button>
+          </>
+        ) : (
+          <div className="auth-sent">
+            <div className="ready-icon auth-sent-icon"><Ico.check width="36" height="36" /></div>
+            <h1 className="auth-title">Email envoyé</h1>
+            <p className="auth-sub">
+              Vérifiez votre boîte de réception. Le lien expire dans 30 minutes.
+              Pensez aussi au dossier spam.
+            </p>
+            <button className="btn btn-accent btn-block btn-lg" onClick={() => go('signin')}>
+              J'ai compris
+            </button>
+            <button className="btn btn-ghost btn-block" onClick={() => setSent(false)}>
+              Renvoyer l'email
+            </button>
+          </div>
+        )}
+      </div>
+    </AuthShell>
+  );
+}
+
+window.SignIn = SignIn;
+window.SignUp = SignUp;
+window.Forgot = Forgot;
+
+</script>
+
+<script type="text/babel">
+// ============================================
+// App shell — screen router + tweaks
+// ============================================
+
+// Tweakable defaults
+const LP_TWEAKS = /*EDITMODE-BEGIN*/{
+  "accent_hue": 82,
+  "radius": "round",
+  "density": "comfortable"
+}/*EDITMODE-END*/;
+
+function applyTweaks(t) {
+  const hue = t.accent_hue;
+  document.documentElement.style.setProperty('--accent', `oklch(0.82 0.16 ${hue})`);
+  document.documentElement.style.setProperty('--accent-soft', `oklch(0.94 0.06 ${hue})`);
+  document.documentElement.style.setProperty('--accent-ink', `oklch(0.28 0.1 ${hue})`);
+
+  if (t.radius === 'sharp') {
+    document.documentElement.style.setProperty('--r-md', '4px');
+    document.documentElement.style.setProperty('--r-lg', '6px');
+    document.documentElement.style.setProperty('--r-xl', '10px');
+    document.documentElement.style.setProperty('--r-pill', '6px');
+  } else {
+    document.documentElement.style.removeProperty('--r-md');
+    document.documentElement.style.removeProperty('--r-lg');
+    document.documentElement.style.removeProperty('--r-xl');
+    document.documentElement.style.removeProperty('--r-pill');
+  }
+}
+
+function App() {
+  const [screen, setScreen] = React.useState(() => {
+    return localStorage.getItem('lp-screen') || 'landing';
+  });
+  const [navVisible, setNavVisible] = React.useState(true);
+  const [tweaksOpen, setTweaksOpen] = React.useState(false);
+  const [tweaks, setTweaks] = React.useState(LP_TWEAKS);
+
+  React.useEffect(() => {
+    localStorage.setItem('lp-screen', screen);
+    window.scrollTo(0, 0);
+  }, [screen]);
+
+  React.useEffect(() => {
+    applyTweaks(tweaks);
+  }, [tweaks]);
+
+  // Edit-mode host protocol
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (!e.data || typeof e.data !== 'object') return;
+      if (e.data.type === '__activate_edit_mode') setTweaksOpen(true);
+      if (e.data.type === '__deactivate_edit_mode') setTweaksOpen(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const setTweak = (key, value) => {
+    const next = { ...tweaks, [key]: value };
+    setTweaks(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: value } }, '*');
+  };
+
+  const go = (s) => setScreen(s);
+
+  const screens = [
+    { k: 'landing', l: 'Landing' },
+    { k: 'onboarding', l: 'Onboarding' },
+    { k: 'signin', l: 'Connexion' },
+    { k: 'signup', l: 'Inscription' },
+    { k: 'forgot', l: 'Mot de passe' },
+  ];
+
+  return (
+    <div data-screen-label={
+      screen === 'landing' ? '01 Landing'
+      : screen === 'onboarding' ? '02 Onboarding'
+      : screen === 'signin' ? '03 Connexion'
+      : screen === 'signup' ? '04 Inscription'
+      : '05 Mot de passe oublié'
+    }>
+      {/* Screen nav (persistent, for prototype) */}
+      <button className="screen-nav-toggle" onClick={() => setNavVisible(v => !v)} aria-label="Menu écrans">
+        <Ico.menu width="16" height="16" />
+      </button>
+      <nav className={`screen-nav ${navVisible ? 'is-visible' : ''}`}>
+        {screens.map(s => (
+          <button
+            key={s.k}
+            className={screen === s.k ? 'is-on' : ''}
+            onClick={() => go(s.k)}
+          >
+            {s.l}
+          </button>
+        ))}
+      </nav>
+
+      {/* Tweaks panel */}
+      <div className={`tweaks-panel ${tweaksOpen ? 'is-open' : ''}`}>
+        <div className="tweaks-h">TWEAKS</div>
+
+        <div className="tweaks-row">
+          <div className="tweaks-label">
+            <span>Couleur d'accent</span>
+            <span className="mono">{tweaks.accent_hue}°</span>
+          </div>
+          <div className="tweaks-swatches">
+            {[
+              { hue: 82, name: 'Safran' },
+              { hue: 25, name: 'Corail' },
+              { hue: 155, name: 'Menthe' },
+              { hue: 230, name: 'Océan' },
+              { hue: 310, name: 'Prune' },
+            ].map(c => (
+              <button
+                key={c.hue}
+                className={`tweaks-swatch ${tweaks.accent_hue === c.hue ? 'is-on' : ''}`}
+                style={{ background: `oklch(0.82 0.16 ${c.hue})` }}
+                onClick={() => setTweak('accent_hue', c.hue)}
+                title={c.name}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="tweaks-row">
+          <div className="tweaks-label"><span>Rayon des coins</span></div>
+          <div className="tweaks-seg">
+            <button className={tweaks.radius === 'round' ? 'is-on' : ''} onClick={() => setTweak('radius', 'round')}>Arrondi</button>
+            <button className={tweaks.radius === 'sharp' ? 'is-on' : ''} onClick={() => setTweak('radius', 'sharp')}>Net</button>
+          </div>
+        </div>
+
+        <div className="tweaks-row">
+          <div className="tweaks-label"><span>Thème</span></div>
+          <div className="tweaks-seg">
+            <button
+              className={document.documentElement.getAttribute('data-theme') !== 'dark' ? 'is-on' : ''}
+              onClick={() => {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('lp-theme', 'light');
+                setTweaks(t => ({ ...t }));
+              }}
+            >Clair</button>
+            <button
+              className={document.documentElement.getAttribute('data-theme') === 'dark' ? 'is-on' : ''}
+              onClick={() => {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('lp-theme', 'dark');
+                setTweaks(t => ({ ...t }));
+              }}
+            >Sombre</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Screens */}
+      {screen === 'landing' && <Landing go={go} />}
+      {screen === 'onboarding' && <Onboarding go={go} />}
+      {screen === 'signin' && <SignIn go={go} />}
+      {screen === 'signup' && <SignUp go={go} />}
+      {screen === 'forgot' && <Forgot go={go} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
