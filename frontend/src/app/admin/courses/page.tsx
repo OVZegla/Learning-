@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { Protected } from "@/components/Protected";
+import { Icon } from "@/components/Icons";
 import { api } from "@/lib/api";
 
 interface Course {
@@ -13,6 +14,12 @@ interface Course {
   author: { id: string; name: string };
   updatedAt: string;
 }
+
+const STATUS_PILL: Record<Course["status"], string> = {
+  DRAFT: "pill",
+  PUBLISHED: "pill pill-mint",
+  ARCHIVED: "pill pill-plum",
+};
 
 export default function AdminCoursesPage() {
   return (
@@ -27,6 +34,7 @@ function Courses() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
   async function refresh() {
     try {
@@ -36,9 +44,7 @@ function Courses() {
     }
   }
 
-  useEffect(() => {
-    refresh();
-  }, []);
+  useEffect(() => { refresh(); }, []);
 
   async function create(e: FormEvent) {
     e.preventDefault();
@@ -50,6 +56,7 @@ function Courses() {
       });
       setTitle("");
       setDescription("");
+      setShowForm(false);
       await refresh();
     } catch (err: any) {
       setError(err.message);
@@ -68,72 +75,118 @@ function Courses() {
   }
 
   return (
-    <section className="space-y-8">
-      <div>
-        <h1 className="mb-4 text-2xl font-semibold">Créer une formation</h1>
-        <form className="card space-y-3" onSubmit={create}>
-          <input
-            className="input"
-            placeholder="Titre"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          <textarea
-            className="input"
-            placeholder="Description"
-            rows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          {error && <p className="text-sm text-red-600">{error}</p>}
-          <button className="btn">Créer</button>
-        </form>
+    <section>
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">Catalogue</h1>
+          <p className="page-sub">Créez, publiez et gérez les formations de votre organisation.</p>
+        </div>
+        <button className="btn btn-accent" onClick={() => setShowForm((v) => !v)}>
+          <Icon.plus width={16} height={16} />
+          Nouvelle formation
+        </button>
       </div>
 
-      <div>
-        <h2 className="mb-3 text-lg font-semibold">Formations existantes</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+      {showForm && (
+        <form className="card" style={{ marginBottom: 24, maxWidth: 640 }} onSubmit={create}>
+          <h2 className="section-title-sm">Créer une formation</h2>
+          <div className="field" style={{ marginBottom: 12 }}>
+            <label>Titre</label>
+            <input
+              placeholder="Ex. Les bases de l'impression murale"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div className="field" style={{ marginBottom: 12 }}>
+            <label>Description</label>
+            <textarea
+              placeholder="De quoi parle cette formation ?"
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+          {error && <p style={{ color: "var(--rose)", fontSize: 13 }}>{error}</p>}
+          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+            <button className="btn btn-accent" type="submit">Créer</button>
+            <button className="btn btn-ghost" type="button" onClick={() => setShowForm(false)}>
+              Annuler
+            </button>
+          </div>
+        </form>
+      )}
+
+      <h2 className="section-title-sm">Formations existantes</h2>
+      {courses.length === 0 ? (
+        <div className="card" style={{ textAlign: "center", padding: 48, color: "var(--ink-3)" }}>
+          Aucune formation créée pour le moment.
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "grid",
+            gap: 16,
+            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+          }}
+        >
           {courses.map((c) => (
             <div key={c.id} className="card">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="text-lg font-medium">
-                    <Link href={`/courses/${c.id}`} className="hover:underline">
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+                <div style={{ minWidth: 0 }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 600, letterSpacing: "-0.02em", margin: 0 }}>
+                    <Link href={`/courses/${c.id}`} style={{ color: "var(--ink)" }}>
                       {c.title}
                     </Link>
                   </h3>
-                  <p className="text-xs text-neutral-500">Par {c.author.name}</p>
+                  <p style={{ fontSize: 12, color: "var(--ink-3)", margin: "4px 0 0" }}>
+                    Par {c.author.name}
+                  </p>
                 </div>
-                <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs dark:bg-neutral-800">
-                  {c.status}
-                </span>
+                <span className={STATUS_PILL[c.status]}>{c.status}</span>
               </div>
+
               {c.description && (
-                <p className="mt-2 line-clamp-2 text-sm text-neutral-500">{c.description}</p>
+                <p
+                  style={{
+                    fontSize: 13,
+                    color: "var(--ink-2)",
+                    margin: "12px 0 0",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
+                  {c.description}
+                </p>
               )}
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Link className="btn-secondary" href={`/admin/courses/${c.id}/edit`}>
+
+              <div style={{ marginTop: 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <Link className="btn btn-outline btn-sm" href={`/admin/courses/${c.id}/edit`}>
+                  <Icon.edit width={14} height={14} />
                   Éditer le contenu
                 </Link>
                 {c.status !== "PUBLISHED" && (
-                  <button className="btn-secondary" onClick={() => setStatus(c.id, "PUBLISHED")}>
+                  <button className="btn btn-outline btn-sm" onClick={() => setStatus(c.id, "PUBLISHED")}>
                     Publier
                   </button>
                 )}
                 {c.status !== "DRAFT" && (
-                  <button className="btn-secondary" onClick={() => setStatus(c.id, "DRAFT")}>
-                    Brouillon
+                  <button className="btn btn-outline btn-sm" onClick={() => setStatus(c.id, "DRAFT")}>
+                    Repasser en brouillon
                   </button>
                 )}
-                <button className="btn-secondary" onClick={() => remove(c.id)}>
+                <button className="btn btn-danger btn-sm" onClick={() => remove(c.id)}>
+                  <Icon.trash width={14} height={14} />
                   Supprimer
                 </button>
               </div>
             </div>
           ))}
         </div>
-      </div>
+      )}
     </section>
   );
 }

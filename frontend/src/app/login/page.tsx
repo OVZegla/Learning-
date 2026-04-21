@@ -2,7 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { AuthShell } from "@/components/AuthShell";
+import { Icon } from "@/components/Icons";
 import { useAuth } from "@/lib/auth";
 
 export default function LoginPage() {
@@ -28,40 +29,48 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md">
-      <h1 className="mb-6 text-2xl font-semibold">Connexion</h1>
-      <form onSubmit={onSubmit} className="space-y-4">
-        <label className="block space-y-1">
-          <span className="text-sm text-neutral-500">Email</span>
+    <AuthShell kind="signin">
+      <form className="auth-form" onSubmit={onSubmit}>
+        <h1 className="auth-title">Content de vous revoir 👋</h1>
+        <p className="auth-sub">Connectez-vous pour reprendre là où vous vous êtes arrêté.</p>
+
+        <div className="field">
+          <label>Adresse email</label>
           <input
             type="email"
-            className="input"
+            placeholder="vous@entreprise.fr"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </label>
-        <label className="block space-y-1">
-          <span className="text-sm text-neutral-500">Mot de passe</span>
+        </div>
+
+        <div className="field">
+          <div className="field-label-row">
+            <label>Mot de passe</label>
+          </div>
           <input
             type="password"
-            className="input"
+            placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-        </label>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button className="btn w-full" disabled={busy}>
-          {busy ? "…" : "Se connecter"}
+        </div>
+
+        {error && (
+          <p style={{ color: "var(--rose)", fontSize: 13, marginBottom: 12 }}>{error}</p>
+        )}
+
+        <button className="btn btn-accent btn-block btn-lg" disabled={busy} type="submit">
+          {busy ? "Connexion…" : "Se connecter"}
+          {!busy && <Icon.arrow />}
         </button>
+
+        <p className="auth-legal mono">
+          En continuant, vous acceptez nos CGU et notre politique de confidentialité.
+        </p>
       </form>
-      <p className="mt-4 text-center text-sm text-neutral-500">
-        Pas de compte ?{" "}
-        <Link href="/register" className="underline">
-          Créer un compte
-        </Link>
-      </p>
-    </div>
+    </AuthShell>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Protected } from "@/components/Protected";
+import { Icon } from "@/components/Icons";
 import { api } from "@/lib/api";
 
 interface CourseCard {
@@ -10,8 +11,11 @@ interface CourseCard {
   title: string;
   description?: string | null;
   category?: string | null;
+  coverUrl?: string | null;
   author: { id: string; name: string };
 }
+
+const TINTS = ["var(--accent-soft)", "var(--mint-soft)", "var(--sky-soft)", "var(--plum-soft)", "var(--rose-soft)"];
 
 export default function DashboardPage() {
   return (
@@ -31,37 +35,98 @@ function Dashboard() {
       .catch((e) => setError(e.message));
   }, []);
 
-  if (error) return <p className="text-red-600">{error}</p>;
-  if (!courses) return <p className="text-neutral-500">Chargement…</p>;
-
-  if (courses.length === 0) {
-    return (
-      <section>
-        <h1 className="mb-2 text-2xl font-semibold">Mes formations</h1>
-        <p className="text-neutral-500">
-          Aucune formation ne vous est encore attribuée. Contactez votre administrateur.
-        </p>
-      </section>
-    );
-  }
+  if (error) return <p style={{ color: "var(--rose)" }}>{error}</p>;
+  if (!courses) return <p style={{ color: "var(--ink-3)" }}>Chargement…</p>;
 
   return (
     <section>
-      <h1 className="mb-4 text-2xl font-semibold">Mes formations</h1>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {courses.map((c) => (
-          <Link key={c.id} href={`/courses/${c.id}`} className="card block">
-            {c.category && (
-              <span className="text-xs uppercase tracking-wide text-brand-accent">{c.category}</span>
-            )}
-            <h2 className="mt-1 text-lg font-medium">{c.title}</h2>
-            {c.description && (
-              <p className="mt-2 line-clamp-3 text-sm text-neutral-500">{c.description}</p>
-            )}
-            <p className="mt-3 text-xs text-neutral-400">Par {c.author.name}</p>
-          </Link>
-        ))}
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">Mes formations</h1>
+          <p className="page-sub">Reprenez là où vous vous êtes arrêté.</p>
+        </div>
       </div>
+
+      {courses.length === 0 ? (
+        <div className="card" style={{ textAlign: "center", padding: 48 }}>
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              margin: "0 auto 16px",
+              borderRadius: 16,
+              background: "var(--bg-inset)",
+              color: "var(--ink-3)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Icon.book />
+          </div>
+          <h2 style={{ fontSize: 18, fontWeight: 600, margin: "0 0 8px" }}>
+            Aucune formation pour le moment
+          </h2>
+          <p style={{ color: "var(--ink-2)", margin: 0 }}>
+            Contactez votre administrateur pour obtenir l'accès à vos formations.
+          </p>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "grid",
+            gap: 20,
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          }}
+        >
+          {courses.map((c, i) => (
+            <Link key={c.id} href={`/courses/${c.id}`} className="course-card">
+              <div
+                className="course-thumb placeholder-img"
+                data-label={c.coverUrl ? "cover.jpg" : `${c.category ?? "formation"}.jpg`}
+                style={{ background: TINTS[i % TINTS.length] }}
+              >
+                {c.coverUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={c.coverUrl}
+                    alt=""
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                )}
+              </div>
+              <div className="course-body">
+                {c.category && <div className="course-cat mono">{c.category}</div>}
+                <h3 className="course-title">{c.title}</h3>
+                {c.description && (
+                  <p
+                    style={{
+                      fontSize: 13,
+                      color: "var(--ink-3)",
+                      margin: "0 0 12px",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {c.description}
+                  </p>
+                )}
+                <div className="course-meta">
+                  <span><Icon.user width={13} height={13} /> {c.author.name}</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

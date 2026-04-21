@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Protected } from "@/components/Protected";
+import { Icon } from "@/components/Icons";
 import { api } from "@/lib/api";
 import type { Role } from "@/lib/auth";
 
@@ -12,6 +13,12 @@ interface User {
   role: Role;
   createdAt: string;
 }
+
+const ROLE_PILL: Record<Role, string> = {
+  ADMIN: "pill pill-plum",
+  FORMATEUR: "pill pill-accent",
+  APPRENANT: "pill pill-mint",
+};
 
 export default function AdminUsersPage() {
   return (
@@ -33,9 +40,7 @@ function Users() {
     }
   }
 
-  useEffect(() => {
-    load();
-  }, []);
+  useEffect(() => { load(); }, []);
 
   async function changeRole(id: string, role: Role) {
     await api(`/users/${id}/role`, { method: "PATCH", body: JSON.stringify({ role }) });
@@ -48,44 +53,66 @@ function Users() {
     await load();
   }
 
-  if (error) return <p className="text-red-600">{error}</p>;
-  if (!users) return <p className="text-neutral-500">Chargement…</p>;
+  if (error) return <p style={{ color: "var(--rose)" }}>{error}</p>;
+  if (!users) return <p style={{ color: "var(--ink-3)" }}>Chargement…</p>;
 
   return (
     <section>
-      <h1 className="mb-4 text-2xl font-semibold">Utilisateurs</h1>
-      <table className="w-full text-sm">
-        <thead className="text-left text-xs uppercase text-neutral-500">
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">Utilisateurs</h1>
+          <p className="page-sub">Gérez les rôles et les accès de votre organisation.</p>
+        </div>
+      </div>
+
+      <table className="data-table">
+        <thead>
           <tr>
-            <th className="py-2">Nom</th>
+            <th>Nom</th>
             <th>Email</th>
-            <th>Rôle</th>
-            <th></th>
+            <th>Rôle actuel</th>
+            <th>Modifier</th>
+            <th className="col-right"></th>
           </tr>
         </thead>
         <tbody>
-          {users.map((u) => (
-            <tr key={u.id} className="border-t border-neutral-200 dark:border-neutral-800">
-              <td className="py-2">{u.name}</td>
-              <td>{u.email}</td>
-              <td>
-                <select
-                  className="input py-1"
-                  value={u.role}
-                  onChange={(e) => changeRole(u.id, e.target.value as Role)}
-                >
-                  <option value="APPRENANT">APPRENANT</option>
-                  <option value="FORMATEUR">FORMATEUR</option>
-                  <option value="ADMIN">ADMIN</option>
-                </select>
-              </td>
-              <td className="text-right">
-                <button className="btn-secondary" onClick={() => remove(u.id)}>
-                  Supprimer
-                </button>
-              </td>
-            </tr>
-          ))}
+          {users.map((u) => {
+            const initials = u.name.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+            return (
+              <tr key={u.id}>
+                <td>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <span className="avatar-sm" style={{ background: "var(--accent-soft)", color: "var(--accent-ink)", border: "none" }}>
+                      {initials}
+                    </span>
+                    <span style={{ fontWeight: 500 }}>{u.name}</span>
+                  </div>
+                </td>
+                <td style={{ color: "var(--ink-2)" }}>{u.email}</td>
+                <td>
+                  <span className={ROLE_PILL[u.role]}>{u.role}</span>
+                </td>
+                <td>
+                  <select
+                    className="input"
+                    style={{ width: "auto", padding: "6px 10px", fontSize: 13 }}
+                    value={u.role}
+                    onChange={(e) => changeRole(u.id, e.target.value as Role)}
+                  >
+                    <option value="APPRENANT">APPRENANT</option>
+                    <option value="FORMATEUR">FORMATEUR</option>
+                    <option value="ADMIN">ADMIN</option>
+                  </select>
+                </td>
+                <td className="col-right">
+                  <button className="btn btn-danger btn-sm" onClick={() => remove(u.id)}>
+                    <Icon.trash width={14} height={14} />
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </section>

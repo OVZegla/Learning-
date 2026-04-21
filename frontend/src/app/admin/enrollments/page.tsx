@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { Protected } from "@/components/Protected";
+import { Icon } from "@/components/Icons";
 import { api } from "@/lib/api";
 
 interface User { id: string; email: string; name: string }
@@ -70,82 +71,114 @@ function Enrollments() {
   }
 
   async function revoke(id: string) {
+    if (!confirm("Révoquer cet accès ?")) return;
     await api(`/enrollments/${id}`, { method: "DELETE" });
     await refresh();
   }
 
   return (
-    <section className="space-y-8">
-      <div>
-        <h1 className="mb-4 text-2xl font-semibold">Attribuer un accès</h1>
-        <form className="card flex flex-wrap items-end gap-4" onSubmit={grant}>
-          <label className="flex-1 space-y-1">
-            <span className="text-sm text-neutral-500">Utilisateur</span>
-            <select className="input" value={userId} onChange={(e) => setUserId(e.target.value)}>
+    <section>
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">Accès</h1>
+          <p className="page-sub">
+            Attribuez ou révoquez l'accès à une formation pour un utilisateur.
+          </p>
+        </div>
+      </div>
+
+      <form className="card" style={{ marginBottom: 28 }} onSubmit={grant}>
+        <h2 className="section-title-sm">Attribuer un accès</h2>
+        <div
+          style={{
+            display: "grid",
+            gap: 12,
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            alignItems: "end",
+          }}
+        >
+          <div className="field">
+            <label>Utilisateur</label>
+            <select value={userId} onChange={(e) => setUserId(e.target.value)}>
               {users.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.name} ({u.email})
                 </option>
               ))}
             </select>
-          </label>
-          <label className="flex-1 space-y-1">
-            <span className="text-sm text-neutral-500">Formation</span>
-            <select className="input" value={courseId} onChange={(e) => setCourseId(e.target.value)}>
+          </div>
+          <div className="field">
+            <label>Formation</label>
+            <select value={courseId} onChange={(e) => setCourseId(e.target.value)}>
               {courses.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.title}
                 </option>
               ))}
             </select>
-          </label>
-          <label className="space-y-1">
-            <span className="text-sm text-neutral-500">Expire le (optionnel)</span>
+          </div>
+          <div className="field">
+            <label>Expire le (optionnel)</label>
             <input
               type="date"
-              className="input"
               value={expiresAt}
               onChange={(e) => setExpiresAt(e.target.value)}
             />
-          </label>
-          <button className="btn">Accorder l'accès</button>
-          {error && <p className="w-full text-sm text-red-600">{error}</p>}
-        </form>
-      </div>
+          </div>
+          <button className="btn btn-accent" type="submit">
+            <Icon.plus width={16} height={16} />
+            Accorder l'accès
+          </button>
+        </div>
+        {error && <p style={{ color: "var(--rose)", fontSize: 13, marginTop: 12 }}>{error}</p>}
+      </form>
 
-      <div>
-        <h2 className="mb-3 text-lg font-semibold">Accès actifs</h2>
-        <table className="w-full text-sm">
-          <thead className="text-left text-xs uppercase text-neutral-500">
-            <tr>
-              <th className="py-2">Bénéficiaire</th>
-              <th>Formation</th>
-              <th>Expire</th>
-              <th>Statut</th>
-              <th></th>
+      <h2 className="section-title-sm">Accès actifs</h2>
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Bénéficiaire</th>
+            <th>Formation</th>
+            <th>Expire</th>
+            <th>Statut</th>
+            <th className="col-right"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {enrollments.map((e) => (
+            <tr key={e.id}>
+              <td>
+                {e.user ? (
+                  <>
+                    <div style={{ fontWeight: 500 }}>{e.user.name}</div>
+                    <div style={{ fontSize: 12, color: "var(--ink-3)" }}>{e.user.email}</div>
+                  </>
+                ) : (
+                  <span className="pill pill-plum">Groupe · {e.group?.name}</span>
+                )}
+              </td>
+              <td style={{ color: "var(--ink-2)" }}>{e.course.title}</td>
+              <td style={{ color: "var(--ink-3)" }} className="mono">
+                {e.expiresAt ? new Date(e.expiresAt).toLocaleDateString("fr-FR") : "—"}
+              </td>
+              <td>
+                {e.revokedAt ? (
+                  <span className="pill" style={{ color: "var(--rose)" }}>Révoqué</span>
+                ) : (
+                  <span className="pill pill-mint">Actif</span>
+                )}
+              </td>
+              <td className="col-right">
+                {!e.revokedAt && (
+                  <button className="btn btn-danger btn-sm" onClick={() => revoke(e.id)}>
+                    Révoquer
+                  </button>
+                )}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {enrollments.map((e) => (
-              <tr key={e.id} className="border-t border-neutral-200 dark:border-neutral-800">
-                <td className="py-2">
-                  {e.user ? `${e.user.name} (${e.user.email})` : `Groupe: ${e.group?.name}`}
-                </td>
-                <td>{e.course.title}</td>
-                <td>{e.expiresAt ? new Date(e.expiresAt).toLocaleDateString() : "—"}</td>
-                <td>{e.revokedAt ? "Révoqué" : "Actif"}</td>
-                <td className="text-right">
-                  {!e.revokedAt && (
-                    <button className="btn-secondary" onClick={() => revoke(e.id)}>
-                      Révoquer
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }
