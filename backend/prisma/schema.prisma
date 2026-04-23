@@ -29,6 +29,8 @@ model User {
   certificates  Certificate[]
   refreshTokens RefreshToken[]
   quizAttempts  QuizAttempt[]
+  questionsAsked    CourseQuestion[] @relation("QuestionAsker")
+  questionsAnswered CourseQuestion[] @relation("QuestionAnswerer")
 }
 
 model RefreshToken {
@@ -81,6 +83,7 @@ model Course {
   modules      Module[]
   enrollments  Enrollment[]
   certificates Certificate[]
+  questions    CourseQuestion[]
 
   @@index([authorId])
   @@index([status])
@@ -184,6 +187,26 @@ model QuizAttempt {
 
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CourseQuestion {
+  id           String    @id @default(cuid())
+  courseId     String
+  askerId      String
+  body         String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  resolvedAt   DateTime?
+  answerBody   String?
+  answerById   String?
+  answeredAt   DateTime?
+
+  course       Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  asker        User      @relation("QuestionAsker", fields: [askerId], references: [id], onDelete: Cascade)
+  answerBy     User?     @relation("QuestionAnswerer", fields: [answerById], references: [id], onDelete: SetNull)
+
+  @@index([courseId])
+  @@index([askerId])
 }
 
 model Certificate {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Protected } from "@/components/Protected";
 import { Icon } from "@/components/Icons";
+import { QuestionsPanel } from "@/components/QuestionsPanel";
 import { api } from "@/lib/api";
 
 type LessonType = "VIDEO" | "TEXT" | "PDF" | "IMAGE" | "QUIZ";
@@ -40,6 +41,7 @@ function CourseView() {
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [currentId, setCurrentId] = useState<string | null>(null);
+  const [tab, setTab] = useState<"lesson" | "questions">("lesson");
 
   const refresh = useCallback(async () => {
     try {
@@ -166,13 +168,47 @@ function CourseView() {
           </div>
         )}
 
-        <div className="card" style={{ minHeight: 400, padding: 28 }}>
-          {current ? (
-            <LessonView lesson={current} canEdit={course.canEdit} onProgress={refresh} />
-          ) : (
-            <p style={{ color: "var(--ink-3)" }}>Sélectionnez une leçon.</p>
-          )}
+        <div style={{ display: "flex", gap: 4, marginBottom: 16, borderBottom: "1px solid var(--line)" }}>
+          <button
+            className="chip"
+            onClick={() => setTab("lesson")}
+            style={{
+              borderRadius: 0,
+              background: "transparent",
+              borderBottom: tab === "lesson" ? "2px solid var(--ink)" : "2px solid transparent",
+              color: tab === "lesson" ? "var(--ink)" : "var(--ink-3)",
+              padding: "10px 14px",
+              marginBottom: -1,
+            }}
+          >
+            Leçon en cours
+          </button>
+          <button
+            className="chip"
+            onClick={() => setTab("questions")}
+            style={{
+              borderRadius: 0,
+              background: "transparent",
+              borderBottom: tab === "questions" ? "2px solid var(--ink)" : "2px solid transparent",
+              color: tab === "questions" ? "var(--ink)" : "var(--ink-3)",
+              padding: "10px 14px",
+              marginBottom: -1,
+            }}
+          >
+            Questions / Réponses
+          </button>
         </div>
+
+        {tab === "lesson" && (
+          <div className="card" style={{ minHeight: 400, padding: 28 }}>
+            {current ? (
+              <LessonView lesson={current} canEdit={course.canEdit} onProgress={refresh} />
+            ) : (
+              <p style={{ color: "var(--ink-3)" }}>Sélectionnez une leçon.</p>
+            )}
+          </div>
+        )}
+        {tab === "questions" && <QuestionsPanel courseId={course.id} />}
       </section>
     </div>
   );

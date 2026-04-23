@@ -16,3 +16,7 @@ backend/data/
 *.db-journal
 *.tsbuildinfo
 package-lock.json
+
+# Backend uploads (user content, not code)
+backend/uploads/*
+!backend/uploads/.gitkeep

@@ -41,10 +41,23 @@ export class CoursesService {
       });
     }
     const ids = await this.access.accessibleCourseIds(user.id);
-    return this.prisma.course.findMany({
+    const courses = await this.prisma.course.findMany({
       where: { id: { in: ids }, status: CourseStatus.PUBLISHED },
       orderBy: { updatedAt: "desc" },
-      include: { author: { select: { id: true, name: true } } },
+      include: {
+        author: { select: { id: true, name: true } },
+        modules: { select: { lessons: { select: { id: true } } } },
+      },
+    });
+    const progress = await this.prisma.progress.findMany({
+      where: { userId: user.id, lesson: { module: { courseId: { in: ids } } } },
+      select: { lessonId: true, completedAt: true },
+    });
+    const completed = new Set(progress.filter((p) => p.completedAt).map((p) => p.lessonId));
+    return courses.map(({ modules, ...c }) => {
+      const lessonIds = modules.flatMap((m) => m.lessons.map((l) => l.id));
+      const done = lessonIds.filter((id) => completed.has(id)).length;
+      return { ...c, lessonsTotal: lessonIds.length, lessonsCompleted: done };
     });
   }
 

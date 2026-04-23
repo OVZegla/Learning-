@@ -13,6 +13,8 @@ interface CourseCard {
   category?: string | null;
   coverUrl?: string | null;
   author: { id: string; name: string };
+  lessonsTotal?: number;
+  lessonsCompleted?: number;
 }
 
 const TINTS = ["var(--accent-soft)", "var(--mint-soft)", "var(--sky-soft)", "var(--plum-soft)", "var(--rose-soft)"];
@@ -118,6 +120,21 @@ function Dashboard() {
                   >
                     {c.description}
                   </p>
+                )}
+                {typeof c.lessonsTotal === "number" && c.lessonsTotal > 0 && (
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--ink-3)", marginBottom: 6 }}>
+                      <span>
+                        {c.lessonsCompleted ?? 0}/{c.lessonsTotal} leçons
+                      </span>
+                      <span className="mono">
+                        {Math.round(((c.lessonsCompleted ?? 0) / c.lessonsTotal) * 100)}%
+                      </span>
+                    </div>
+                    <div className="course-progress-bar" style={{ margin: 0 }}>
+                      <span style={{ width: `${((c.lessonsCompleted ?? 0) / c.lessonsTotal) * 100}%` }} />
+                    </div>
+                  </div>
                 )}
                 <div className="course-meta">
                   <span><Icon.user width={13} height={13} /> {c.author.name}</span>

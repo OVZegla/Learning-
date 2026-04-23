@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Protected } from "@/components/Protected";
+import { FileDrop } from "@/components/FileDrop";
 import { api } from "@/lib/api";
 
 type LessonType = "VIDEO" | "TEXT" | "PDF" | "IMAGE" | "QUIZ";
@@ -150,19 +151,32 @@ function Editor() {
           value={course.description ?? ""}
           onChange={(e) => setCourse({ ...course, description: e.target.value })}
         />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <input
-            className="input"
-            placeholder="Catégorie"
-            value={course.category ?? ""}
-            onChange={(e) => setCourse({ ...course, category: e.target.value })}
+        <input
+          className="input"
+          placeholder="Catégorie"
+          value={course.category ?? ""}
+          onChange={(e) => setCourse({ ...course, category: e.target.value })}
+        />
+        <div>
+          <div className="field" style={{ marginBottom: 8 }}>
+            <label>Bannière de la formation</label>
+          </div>
+          <FileDrop
+            accept="image/*"
+            value={course.coverUrl}
+            onUploaded={(r) => setCourse({ ...course, coverUrl: r.url })}
+            hint="PNG, JPEG, WEBP ou SVG · max 200 Mo"
           />
-          <input
-            className="input"
-            placeholder="URL de la bannière (optionnel)"
-            value={course.coverUrl ?? ""}
-            onChange={(e) => setCourse({ ...course, coverUrl: e.target.value })}
-          />
+          {course.coverUrl && (
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              style={{ marginTop: 6 }}
+              onClick={() => setCourse({ ...course, coverUrl: null })}
+            >
+              Retirer la bannière
+            </button>
+          )}
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <label className="flex items-center gap-2 text-sm">
@@ -501,17 +515,24 @@ function LessonEditor({
         />
       )}
       {(type === "VIDEO" || type === "PDF" || type === "IMAGE") && (
-        <input
-          className="input"
-          placeholder={
+        <FileDrop
+          accept={
             type === "VIDEO"
-              ? "URL de la vidéo (mp4, webm, ou lien direct)"
+              ? "video/*"
               : type === "PDF"
-                ? "URL du PDF"
-                : "URL de l'image"
+                ? "application/pdf"
+                : "image/*"
           }
-          value={(content.url as string) ?? ""}
-          onChange={(e) => setContent({ ...content, url: e.target.value })}
+          value={(content.url as string) ?? null}
+          onUploaded={(r) => setContent({ ...content, url: r.url })}
+          preview={type === "VIDEO" ? "video" : type === "PDF" ? "pdf" : "image"}
+          hint={
+            type === "VIDEO"
+              ? "MP4, WEBM ou MOV · max 200 Mo"
+              : type === "PDF"
+                ? "Document PDF · max 200 Mo"
+                : "PNG, JPEG, WEBP ou SVG · max 200 Mo"
+          }
         />
       )}
 

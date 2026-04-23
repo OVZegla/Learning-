@@ -41,6 +41,12 @@ export function Navbar() {
             <Link href="/dashboard" className={isActive("/dashboard") ? "is-active" : ""}>
               Mes formations
             </Link>
+            <Link href="/certificates" className={isActive("/certificates") ? "is-active" : ""}>
+              Mes certificats
+            </Link>
+            <Link href="/questions" className={isActive("/questions") ? "is-active" : ""}>
+              Questions
+            </Link>
             {(user.role === "ADMIN" || user.role === "FORMATEUR") && (
               <Link href="/admin/courses" className={isActive("/admin/courses") ? "is-active" : ""}>
                 Catalogue
