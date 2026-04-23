@@ -8,7 +8,7 @@ coverage
 .DS_Store
 .turbo
 .pnpm-store
-uploads/
+/uploads/
 backend/data/
 .bin/
 *.sqlite
